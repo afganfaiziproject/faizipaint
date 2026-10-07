@@ -192,7 +192,7 @@ export default function BlogPostPage() {
           className="bg-amber-400 text-gray-950 px-6 py-3 rounded-full font-black text-xs flex items-center gap-2 hover:bg-amber-500 transition-colors shadow-lg"
         >
           {isRtl ? <ArrowRight size={16} /> : <ArrowLeft size={16} />}
-          {isRtl ? "بازگشت به مجله گندم" : "Back to Magazine"}
+          {isRtl ? "بازگشت به مقالات رنگ افغان فیضی" : "Back to Paint Articles"}
         </button>
       </div>
     );
@@ -242,11 +242,11 @@ export default function BlogPostPage() {
             className="flex items-center justify-between gap-3 text-xs font-black text-amber-600 dark:text-amber-400 mb-4"
           >
             <span className="bg-amber-100 dark:bg-amber-500/10 px-3 py-1.5 rounded-md">
-              {post.category === 'health' 
-                ? (isRtl ? 'سبک زندگی و سلامت' : 'Health & Lifestyle')
+              {post.category === 'guide' || post.category === 'health' 
+                ? (isRtl ? 'آموزش نقاشی و اجرا' : 'Painting Guide')
                 : post.category === 'news' 
-                ? (isRtl ? 'اخبار گندم' : 'Gandum News')
-                : (isRtl ? 'معرفی محصولات' : 'Products')}
+                ? (isRtl ? 'اخبار رنگ افغان فیضی' : 'Faizi Paint News')
+                : (isRtl ? 'معرفی محصولات رنگ' : 'Paint Products')}
             </span>
             
             <div className="flex items-center gap-2">
@@ -286,7 +286,7 @@ export default function BlogPostPage() {
           <div className="flex flex-wrap items-center gap-6 text-sm font-bold text-gray-600 dark:text-gray-400 mb-10 pb-6 border-b border-gray-200/50 dark:border-gray-800/50 overflow-hidden">
             <motion.span {...detailsAnim(0)} className="flex items-center gap-2">
               <User size={16} className="text-gray-400"/> 
-              {post.author || (isRtl ? "تیم تحریریه گندم" : "Editorial Team")}
+              {post.author || (isRtl ? "تیم فنی رنگ افغان فیضی" : "Afghan Faizi Paint Team")}
             </motion.span>
             
             <motion.span {...detailsAnim(1)} className="flex items-center gap-2">
@@ -347,7 +347,7 @@ export default function BlogPostPage() {
                 ))
               ) : (
                 <span className="text-xs font-bold text-gray-500 bg-gray-100/50 dark:bg-gray-800/50 px-3 py-1.5 rounded-md">
-                  {isRtl ? "#جزیره_گندم" : "#Gandum_Island"}
+                  {isRtl ? "#رنگ_افغان_فیضی" : "#Afghan_Faizi_Paint"}
                 </span>
               )}
             </div>
@@ -661,7 +661,7 @@ export default function BlogPostPage() {
         </div>
       </motion.div>
 
-      {/* بخش عضویت در خبرنامه باشگاه گندم */}
+      {/* بخش عضویت در خبرنامه رنگ افغان فیضی */}
       <motion.div 
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -672,10 +672,10 @@ export default function BlogPostPage() {
         <div className="relative z-10">
           <Mail size={48} className="mx-auto text-amber-900 mb-6 opacity-80" />
           <h3 className="text-3xl font-black text-amber-950 mb-4">
-            {isRtl ? "به باشگاه گندم بپیوندید" : "Join Gandum Club"}
+            {isRtl ? "عضویت در باشگاه مشتریان و نرخنامه رنگ" : "Join Afghan Faizi Paint Club"}
           </h3>
           <p className="text-amber-900/80 font-bold mb-8 max-w-md mx-auto">
-            {isRtl ? "جدیدترین مقالات سلامت، اخبار افتتاحیه‌ها و تخفیف‌های ویژه را در ایمیل خود دریافت کنید." : "Get the latest health articles, news, and special discounts in your email."}
+            {isRtl ? "جدیدترین مقالات تخصصی رنگ‌آمیزی، نرخنامه‌های جدید و شرایط عاملیت‌ها را در ایمیل خود دریافت کنید." : "Get the latest paint guides, updated price lists, and agency conditions in your inbox."}
           </p>
           <form className="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto" onSubmit={handleBlogNewsletter}>
             <input 

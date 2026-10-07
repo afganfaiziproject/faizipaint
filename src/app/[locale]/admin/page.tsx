@@ -16,6 +16,7 @@ import MessagesManager from "./components/MessagesManager";
 import CommentsManager from "./components/CommentsManager";
 import AgencyFormsManager from "./components/AgencyFormsManager";
 import NewsletterManager from "./components/NewsletterManager";
+import PriceListsManager from "./components/PriceListsManager";
 import { ShieldAlert } from "lucide-react";
 
 export default async function AdminDashboard({ searchParams }: { searchParams: Promise<{ section?: string }> }) {
@@ -67,6 +68,7 @@ export default async function AdminDashboard({ searchParams }: { searchParams: P
       : section === "newsletter_sec" ? <NewsletterManager />
       : isCorporateSection ? <CorporateManager currentSection={section} />
       : section === "prod_list" ? <ProductsManager />
+      : section === "pricelists_sec" ? <PriceListsManager />
       : section.startsWith("cat_") ? <CategoriesManager activeCategoryId={section.replace("cat_", "")} />
       : section === "users" ? <UsersManager />
       : section === "general" ? <GeneralSettings />

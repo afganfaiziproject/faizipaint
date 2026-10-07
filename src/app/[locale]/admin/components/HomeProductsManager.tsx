@@ -12,7 +12,7 @@ export default function HomeProductsManager() {
 
   const [formData, setFormData] = useState({
     faSubtitle: "محصولات ما", enSubtitle: "Our Products",
-    faTitle: "محبوب‌ترین محصولات جزیره", enTitle: "Most Popular Island Products",
+    faTitle: "محبوب‌ترین رنگ‌های افغان فیضی", enTitle: "Most Popular Afghan Faizi Paints",
     displayType: "featured", // featured | latest | category
     maxItems: "8",
   });

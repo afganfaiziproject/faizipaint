@@ -17,8 +17,8 @@ export default function BlogManager({ currentSection }: { currentSection: string
   const [modalTab, setModalTab] = useState<"content" | "media" | "seo">("content");
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({
-    _id: "", faTitle: "", enTitle: "", slug: "", category: "health",
-    excerpt: "", enExcerpt: "", content: "", enContent: "", readTime: "۵ دقیقه", author: "تحریریه جزیره گندم",
+    _id: "", faTitle: "", enTitle: "", slug: "", category: "guide",
+    excerpt: "", enExcerpt: "", content: "", enContent: "", readTime: "۵ دقیقه", author: "تحریریه رنگ افغان فیضی",
     status: "published", coverImage: "", thumbnailImage: "",
     seoTitle: "", seoDesc: "", seoKeywords: ""
   });
@@ -96,7 +96,7 @@ export default function BlogManager({ currentSection }: { currentSection: string
       content: blog.content || "",
       enContent: blog.enContent || "",
       readTime: blog.readTime || "۵ دقیقه",
-      author: blog.author || "تحریریه جزیره گندم",
+      author: blog.author || "تحریریه رنگ افغان فیضی",
       status: blog.status || "draft",
       coverImage: blog.coverImage || "",
       thumbnailImage: blog.thumbnailImage || "",
@@ -111,8 +111,8 @@ export default function BlogManager({ currentSection }: { currentSection: string
 
   const handleAddNew = () => {
     setFormData({
-      _id: "", faTitle: "", enTitle: "", slug: "", category: "health",
-      excerpt: "", enExcerpt: "", content: "", enContent: "", readTime: "۵ دقیقه", author: "تحریریه جزیره گندم",
+      _id: "", faTitle: "", enTitle: "", slug: "", category: "guide",
+      excerpt: "", enExcerpt: "", content: "", enContent: "", readTime: "۵ دقیقه", author: "تحریریه رنگ افغان فیضی",
       status: "draft", coverImage: "", thumbnailImage: "",
       seoTitle: "", seoDesc: "", seoKeywords: ""
     });
@@ -320,9 +320,10 @@ export default function BlogManager({ currentSection }: { currentSection: string
                       <div className="flex flex-col gap-2">
                         <label className="text-xs font-black text-gray-400">دسته‌بندی</label>
                         <select value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})} className="border border-gray-200 dark:border-gray-800 rounded-xl p-3 bg-transparent text-sm font-bold outline-none focus:border-amber-400">
-                          <option value="health">سبک زندگی و سلامت</option>
-                          <option value="news">اخبار جزیره گندم</option>
-                          <option value="products">معرفی محصولات</option>
+                          <option value="guide">آموزش نقاشی و اجرای رنگ</option>
+                          <option value="news">اخبار رنگ افغان فیضی</option>
+                          <option value="products">معرفی محصولات رنگ و رزین</option>
+                          <option value="industrial">رنگ‌های صنعتی و اپوکسی</option>
                         </select>
                       </div>
                       <div className="flex flex-col gap-2">
@@ -389,7 +390,7 @@ export default function BlogManager({ currentSection }: { currentSection: string
                       <div className="bg-white dark:bg-gray-950 p-4 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800">
                         <div className="text-[11px] text-gray-500 mb-1 flex items-center gap-2">
                           <span className="w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-800 flex items-center justify-center"><ImageIcon size={10}/></span>
-                          <span>جزیره گندم | Gandum Island</span>
+                          <span>رنگ افغان فیضی | Afghan Faizi Paint</span>
                         </div>
                         <div className="text-[15px] text-blue-600 dark:text-blue-400 font-medium hover:underline cursor-pointer truncate">
                           {formData.seoTitle || formData.faTitle || "عنوان مقاله در گوگل"}

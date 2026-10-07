@@ -1,8 +1,8 @@
 import React from "react";
 
 export const metadata = {
-  title: "مرکز رسانه و گالری - جزیره گندم",
-  description: "آرشیو ویدیوهای صنعتی، موشن گرافیک، تیزرهای رسمی و پوسترهای چاپی جزیره گندم",
+  title: "مرکز رسانه و گالری - رنگ افغان فیضی",
+  description: "آرشیو ویدیوهای خطوط تولید، پروژه‌های اجرایی، تیزرها و کاتالوگ‌های رنگ افغان فیضی",
 };
 
 export default function GalleryLayout({

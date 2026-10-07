@@ -59,23 +59,22 @@ const menuStructure: Record<string, TabMenuType> = {
     ]
   },
   products: {
-    label: "محصولات",
+    label: "محصولات و نرخنامه",
     icon: ShoppingBag,
     sidebar: [
-      { id: "prod_list", label: "لیست محصولات", icon: ShoppingBag },
+      { id: "prod_list", label: "لیست محصولات رنگ", icon: ShoppingBag },
+      { id: "pricelists_sec", label: "نرخنامه ولایتی و قیمت‌گذاری", icon: Tag },
       { 
         id: "categories_group", 
         label: "مدیریت دسته‌بندی‌ها", 
         icon: Layers, 
         subItems: [
-          { id: "cat_main", label: "گروه‌های اصلی", icon: Layers },
-          { id: "cat_brands", label: "برندهای زیرمجموعه", icon: Tag },
-          { id: "cat_beverage_type", label: "انواع نوشیدنی", icon: Droplets },
-          { id: "cat_snack_type", label: "انواع تنقلات", icon: Sparkles },
-          { id: "cat_packaging", label: "انواع بسته‌بندی", icon: Package },
-          { id: "cat_flavor", label: "طعم و عصاره", icon: FlaskConical },
-          { id: "cat_weight", label: "احجام و اوزان", icon: Scale },
-          { id: "cat_status", label: "لیبل‌های وضعیت", icon: CheckCircle2 },
+          { id: "cat_main", label: "گروه‌های اصلی رنگ", icon: Layers },
+          { id: "cat_brands", label: "برندها و خطوط تولید", icon: Tag },
+          { id: "cat_oil_type", label: "رنگ‌های روغنی و آلکیدی", icon: Droplets },
+          { id: "cat_plastic_type", label: "رنگ‌های پلاستیک و اکریلیک", icon: Sparkles },
+          { id: "cat_packaging", label: "انواع بسته‌بندی (قوطی، گالن، حلب)", icon: Package },
+          { id: "cat_status", label: "لیبل‌های وضعیت تولید", icon: CheckCircle2 },
         ]
       },
     ]
@@ -106,7 +105,7 @@ const menuStructure: Record<string, TabMenuType> = {
     sidebar: [
       { id: "history", label: "تاریخچه و ویدیو", icon: Factory },
       { id: "vision", label: "چشم‌انداز و ماموریت", icon: Target },
-      { id: "stats", label: "آمار و چرا جزیره گندم", icon: BarChart },
+      { id: "stats", label: "آمار و چرا رنگ افغان فیضی", icon: BarChart },
       { id: "partners", label: "شرکا و گواهینامه‌ها", icon: Award },
       { id: "branches", label: "مدیریت تماس و شعب", icon: MapPin },
       { id: "about_messages_sec", label: "مدیریت پیام‌ها", icon: Mail },

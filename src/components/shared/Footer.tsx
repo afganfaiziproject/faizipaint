@@ -40,20 +40,20 @@ interface FooterProps {
 
 const localTranslations = {
   fa: {
-    about_desc: "جزیره گندم، پیشگام در تولید و عرضه بهترین محصولات غذایی با کیفیت جهانی.",
+    about_desc: "شرکت تولیدی رنگ افغان فیضی، پیشگام در تولید و عرضه بهترین رنگ‌های ساختمانی، صنعتی و فوری با بالاترین کیفیت در افغانستان.",
     quick_links: "لینک‌های سریع",
-    links: { about: "درباره ما", products: "محصولات", factory: "برند ها", agencies: "نمایندگی‌ها", blog: "مجله گندم" },
+    links: { about: "درباره ما", products: "محصولات رنگ", factory: "خطوط تولید", agencies: "نمایندگی‌ها", blog: "مقالات تخصصی" },
     contact_info: "ارتباط با ما",
-    newsletter: { title: "خبرنامه", desc: "برای اطلاع از جدیدترین‌ها عضو شوید.", placeholder: "ایمیل شما..." },
-    copyright: "تمامی حقوق برای گروه جزیره گندم محفوظ است.",
+    newsletter: { title: "نرخنامه و خبرنامه", desc: "برای دریافت جدیدترین نرخنامه‌ها و کاتالوگ‌ها عضو شوید.", placeholder: "ایمیل شما..." },
+    copyright: "تمامی حقوق برای شرکت تولید رنگ افغان فیضی محفوظ است.",
   },
   en: {
-    about_desc: "Jazirah Gandum, a pioneer in producing and supplying the best food products.",
+    about_desc: "Afghan Faizi Paint Co., leading manufacturer of architectural, industrial, and instant coatings in Afghanistan.",
     quick_links: "Quick Links",
-    links: { about: "About Us", products: "Products", factory: "Brands", agencies: "Agencies", blog: "Blog" },
+    links: { about: "About Us", products: "Paint Products", factory: "Production Lines", agencies: "Dealerships", blog: "Technical Articles" },
     contact_info: "Contact Us",
-    newsletter: { title: "Newsletter", desc: "Subscribe for the latest updates.", placeholder: "Your email..." },
-    copyright: "All rights reserved.",
+    newsletter: { title: "Price List & Newsletter", desc: "Subscribe for latest price lists and color charts.", placeholder: "Your email..." },
+    copyright: "All rights reserved by Afghan Faizi Paint Co.",
   }
 };
 
@@ -109,9 +109,9 @@ export default function Footer({ siteLogo = null, contactInfo, footerTexts }: Fo
 
   const safeContact = {
     phone: dataSource.phone || contactInfo?.phone || "+93 790 71 00 15",
-    email: dataSource.email || contactInfo?.email || "info@jazirahgandumco.com",
-    faAddress: dataSource.faAddress || contactInfo?.faAddress || "دفتر مرکزی، جزیره گندم",
-    enAddress: dataSource.enAddress || contactInfo?.enAddress || "HQ Office, Jazirah Gandum",
+    email: dataSource.email || contactInfo?.email || "info@afghanfaizipaint.com",
+    faAddress: dataSource.faAddress || contactInfo?.faAddress || "دفتر مرکزی: شهرک صنعتی، فاز ۲، هرات، افغانستان",
+    enAddress: dataSource.enAddress || contactInfo?.enAddress || "HQ Office: Industrial City, Phase 2, Herat, Afghanistan",
     mapUrl: dataSource.mapUrl || contactInfo?.mapUrl || "#",
     wa: getSocial('whatsapp') || dataSource.wa || contactInfo?.wa || "#",
     tg: getSocial('telegram') || dataSource.tg || contactInfo?.tg || "#",
@@ -321,7 +321,7 @@ export default function Footer({ siteLogo = null, contactInfo, footerTexts }: Fo
                   </span>
                 )}
                 <span className="font-black text-2xl text-zinc-900 dark:text-white tracking-tight">
-                  {isRtl ? "جزیره گندم" : "Jazirah Gandum"}
+                  {isRtl ? "رنگ افغان فیضی" : "Afghan Faizi Paint"}
                 </span>
               </Link>
 
@@ -451,8 +451,8 @@ export default function Footer({ siteLogo = null, contactInfo, footerTexts }: Fo
           <motion.div variants={itemVariants} className="pt-6 border-t border-zinc-300 dark:border-zinc-800/50 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-zinc-600 dark:text-zinc-500 font-bold">
             <p className="text-center md:text-start">
               {isRtl 
-                ? (footerTexts?.copyrightFa || `© ${new Date().getFullYear()} گروه جزیره گندم. ${t("copyright")}`) 
-                : (footerTexts?.copyrightEn || `© ${new Date().getFullYear()} Jazirah Gandum Group. ${t("copyright")}`)}
+                ? (footerTexts?.copyrightFa || `© ${new Date().getFullYear()} شرکت تولید رنگ افغان فیضی. ${t("copyright")}`) 
+                : (footerTexts?.copyrightEn || `© ${new Date().getFullYear()} Afghan Faizi Paint Co. ${t("copyright")}`)}
             </p>
           </motion.div>
         </motion.div>

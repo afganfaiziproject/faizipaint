@@ -2,56 +2,83 @@
 
 import React, { forwardRef } from "react";
 import QRCode from "react-qr-code";
-import { Award, ShieldCheck, CheckCircle } from "lucide-react"; // آیکن‌های گواهینامه‌ها اضافه شد
+import { Award, ShieldCheck, CheckCircle } from "lucide-react";
 
-export interface DatasheetPrintProps {
-  locale: string;
+interface DatasheetPrintProps {
   product: any;
-  categories: any[];
-  brand: any;
+  locale: string;
+  categories?: any[];
+  brands?: any[];
+  brand?: any;
 }
 
 const DatasheetPrint = forwardRef<HTMLDivElement, DatasheetPrintProps>(
-  ({ locale, product, categories, brand }, ref) => {
-    const isRtl = locale === "fa";
-
+  ({ product, locale, categories = [], brands = [] }, ref) => {
     if (!product) return null;
 
-    const title = isRtl ? product.faTitle : product.enTitle || product.faTitle;
-    const description = isRtl ? product.faDesc : product.enDesc || product.faDesc;
-    const productImage = product.images?.main || "https://placehold.co/600x600/png";
+    const isRtl = locale === "fa" || locale === "ar" || locale === "ps";
 
-    const brandName = brand
-      ? isRtl ? brand.faName || brand.enName : brand.enName || brand.faName
-      : "-";
+    const title = isRtl
+      ? (product.faTitle || product.title?.fa || product.title || "")
+      : (product.enTitle || product.title?.en || product.title || "");
 
-    const catObj = categories?.find((c: any) => c.slug === product.category || c._id === product.category);
-    const catName = catObj ? (isRtl ? catObj.faName : catObj.enName) : (product.category || "-");
+    const description = isRtl
+      ? (product.faDesc || product.description?.fa || product.description || "")
+      : (product.enDesc || product.description?.en || product.description || "");
 
-    const resolveSpec = (val: any, faVal: any, enVal: any) => {
-      if (!val) return "-";
-      const cat = categories?.find((c: any) => c.slug === val || c._id === val || c.faName === val);
-      if (cat) return isRtl ? cat.faName : (cat.enName || cat.faName);
-      return isRtl ? (faVal || val) : (enVal || val);
+    const brandName = product.brandId?.faName 
+      ? (isRtl ? product.brandId.faName : (product.brandId.enName || product.brandId.faName))
+      : (isRtl ? "رنگ افغان فیضی" : "Afghan Faizi Paint");
+
+    const categoryMap: Record<string, { fa: string; en: string }> = {
+      oil: { fa: "رنگ روغنی (آلکیدی)", en: "Alkyd Oil Paint" },
+      plastic: { fa: "رنگ پلاستیک و اکریلیک", en: "Plastic & Acrylic Emulsion" },
+      instant: { fa: "رنگ و جلای فوری", en: "Instant Nitrocellulose & Wood Lacquer" },
+      industrial: { fa: "رنگ صنعتی و اپوکسی", en: "Industrial & Epoxy Coating" },
+      primers: { fa: "آستری و ضدزنگ", en: "Primers & Anti-Rust" },
+      decorative: { fa: "رنگ‌های دکوراتیو", en: "Decorative Coatings" },
+      tools: { fa: "حلال‌ها و ابزار", en: "Solvents & Tools" }
     };
 
-    const weight = resolveSpec(product.specs?.weight, product.specs?.weightFa, product.specs?.weightEn);
-    const packagingRaw = resolveSpec(product.specs?.packaging, product.specs?.packagingFa, product.specs?.packagingEn);
-    const flavor = resolveSpec(product.specs?.flavor, product.specs?.flavorFa, product.specs?.flavorEn);
+    const catName = categoryMap[product.mainCat] 
+      ? (isRtl ? categoryMap[product.mainCat].fa : categoryMap[product.mainCat].en)
+      : (product.category || (isRtl ? "رنگ تخصصی" : "Specialty Paint"));
 
-    const ingredients = isRtl ? product.specs?.ingredientsFa : product.specs?.ingredientsEn;
-    const shelfLife = isRtl ? product.specs?.shelfLifeFa : product.specs?.shelfLifeEn;
-    const packCountRaw = product.specs?.itemsPerPackage || "-";
+    const productImage = product.images?.main || product.image || "/images/placeholder-paint.png";
 
-    // منطق اصلاح شده برای جلوگیری از نمایش خط تیره‌های اضافی و خام در بسته‌بندی
-    const packArr = [];
-    if (packCountRaw && packCountRaw !== "-" && packCountRaw !== "نامشخص" && packCountRaw !== "N/A") packArr.push(packCountRaw);
-    if (packagingRaw && packagingRaw !== "-" && packagingRaw !== "نامشخص" && packagingRaw !== "N/A") packArr.push(packagingRaw);
-    const displayPackaging = packArr.length > 0 ? packArr.join(" - ") : "-";
+    // استخراج مشخصات تخصصی رنگ
+    const resolveText = (val: any) => {
+      if (!val) return "-";
+      if (typeof val === "string") return val;
+      return (isRtl ? (val.fa || val.ps || val.en) : (val.en || val.fa)) || "-";
+    };
 
-    const issueDate = new Date().toLocaleDateString(isRtl ? "fa-IR" : "en-US");
-    const documentNo = `TDS-${String(product._id || product.id).slice(-8)}`;
-    const pageUrl = typeof window !== "undefined" ? window.location.href : "";
+    const resinBase = resolveText(product.specs?.resinBase);
+    const thinnerType = resolveText(product.specs?.thinnerType);
+    
+    const surfaceDry = resolveText(product.specs?.dryingTime?.surfaceDry);
+    const fullDry = resolveText(product.specs?.dryingTime?.fullDry);
+    const dryingTimeDisplay = `${surfaceDry} (سطحی) / ${fullDry} (کامل)`;
+
+    const coverage = resolveText(product.specs?.coverage) !== "-" 
+      ? resolveText(product.specs?.coverage) 
+      : (product.specs?.coverageRate ? `${product.specs.coverageRate} m²/L` : "۱۰ الی ۱۲ مترمربع بر لیتر");
+
+    const standardCodes = Array.isArray(product.specs?.standardCodes) && product.specs.standardCodes.length > 0
+      ? product.specs.standardCodes.join(", ")
+      : (product.specs?.colorCode || "RAL Standard / ISO 9001");
+
+    const packagingSizes = Array.isArray(product.specs?.packagingSizes) && product.specs.packagingSizes.length > 0
+      ? product.specs.packagingSizes.join(" - ")
+      : (isRtl ? "۱ لیتری، ۴ لیتری (گالن)، ۲۰ لیتری (حلب)" : "1L, 4L (Gallon), 20L (Pail)");
+
+    const applicationMethod = resolveText(product.specs?.applicationMethod) !== "-"
+      ? resolveText(product.specs?.applicationMethod)
+      : (isRtl ? "قلم‌مو، غلطک و پیستوله ایرلس" : "Brush, Roller & Airless Spray");
+
+    const issueDate = new Date().toLocaleDateString(isRtl ? "fa-AF" : "en-US");
+    const documentNo = `TDS-AFP-${String(product._id || product.id || "001").slice(-8).toUpperCase()}`;
+    const pageUrl = typeof window !== "undefined" ? window.location.href : "https://afghanfaizipaint.com";
 
     return (
       <div
@@ -62,16 +89,17 @@ const DatasheetPrint = forwardRef<HTMLDivElement, DatasheetPrintProps>(
       >
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03] z-0 overflow-hidden">
           <span className="text-9xl font-black rotate-[-35deg] whitespace-nowrap">
-            Jazirah Gandum
+            Afghan Faizi Paint
           </span>
         </div>
 
         <div className="relative z-10 flex flex-col h-full w-full gap-8">
 
+          {/* هدر برگه فنی */}
           <div className="flex justify-between items-center border-b-2 border-gray-900 pb-4">
             <div className="flex flex-col gap-1">
               <h3 className="text-xl font-black tracking-tight text-gray-950">
-                {isRtl ? "شرکت صنعتی جزیره گندم" : "Jazirah Gandum Co."}
+                {isRtl ? "شرکت تولید رنگ افغان فیضی" : "Afghan Faizi Paint Co."}
               </h3>
               <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
                 Product Technical Datasheet (TDS)
@@ -83,12 +111,13 @@ const DatasheetPrint = forwardRef<HTMLDivElement, DatasheetPrintProps>(
             </div>
           </div>
 
+          {/* خلاصه مشخصات محصول و تصویر */}
           <div className="flex flex-col gap-4 w-full">
             <div className="flex flex-row items-stretch bg-gray-50 p-6 rounded-2xl border border-gray-100 gap-6">
               <div className="flex flex-col gap-3 flex-[2] justify-center">
                 <div>
                   <span className="text-[10px] font-bold text-amber-600 uppercase tracking-wide">
-                    {isRtl ? "شناسنامه فنی محصول" : "Product ID"}
+                    {isRtl ? "شناسنامه فنی محصول رنگ" : "Paint Technical ID"}
                   </span>
                   <h4 className="text-xl font-black text-gray-950 mt-1">{title}</h4>
                 </div>
@@ -106,19 +135,20 @@ const DatasheetPrint = forwardRef<HTMLDivElement, DatasheetPrintProps>(
                 <span className="text-red-500 text-lg mt-0.5 shrink-0">⚠</span>
                 <div>
                   <h3 className="text-xs font-black text-red-700 mb-1 text-start">
-                    {isRtl ? "هشدار مصرف" : "Warnings"}
+                    {isRtl ? "نکات ایمنی و بهداشت (MSDS Summary)" : "Safety & Health Precautions"}
                   </h3>
                   <p className="text-[11px] font-medium text-red-900/80 leading-relaxed text-justify">
-                    {isRtl ? product.warningMessageFa : product.warningMessageEn}
+                    {isRtl ? (product.warningMessageFa || product.warningMessage?.fa) : (product.warningMessageEn || product.warningMessage?.en)}
                   </p>
                 </div>
               </div>
             )}
           </div>
 
+          {/* جدول مشخصات فنی و مهندسی رنگ */}
           <div className="flex flex-col gap-3 w-full">
             <h5 className={`text-xs font-black text-gray-900 ${isRtl ? 'border-r-4 pr-2' : 'border-l-4 pl-2'} border-amber-400`}>
-              {isRtl ? "جدول مشخصات و پارامترهای فنی" : "Technical Parameters"}
+              {isRtl ? "جدول مشخصات و پارامترهای فنی رنگ" : "Paint Technical Specifications"}
             </h5>
 
             <div className="grid grid-cols-3 gap-6 items-stretch h-full">
@@ -126,35 +156,42 @@ const DatasheetPrint = forwardRef<HTMLDivElement, DatasheetPrintProps>(
                 <table className={`w-full text-xs ${isRtl ? 'text-right' : 'text-left'} border-collapse h-full`}>
                   <thead>
                     <tr className="bg-gray-100 text-gray-600 font-bold border-b border-gray-200">
-                      <th className="px-4 py-3 w-1/3 text-start">{isRtl ? "نام پارامتر" : "Parameter"}</th>
-                      <th className="px-4 py-3 text-start">{isRtl ? "مقدار / مشخصه" : "Value / Specs"}</th>
+                      <th className="px-4 py-3 w-1/3 text-start">{isRtl ? "پارامتر فنی" : "Parameter"}</th>
+                      <th className="px-4 py-3 text-start">{isRtl ? "مشخصه مهندسی" : "Specification"}</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 font-medium text-gray-700 h-full">
                     <tr>
-                      <td className="px-4 py-3 font-bold text-gray-900 text-start">{isRtl ? "برند / دسته‌بندی" : "Brand / Category"}</td>
+                      <td className="px-4 py-3 font-bold text-gray-900 text-start">{isRtl ? "گروه / دسته‌بندی" : "Category"}</td>
                       <td className="px-4 py-3 text-start">{brandName} - {catName}</td>
                     </tr>
                     <tr className="bg-gray-50/50">
-                      <td className="px-4 py-3 font-bold text-gray-900 text-start">{isRtl ? "وزن خالص / حجم ظرف" : "Net Weight / Volume"}</td>
-                      <td className="px-4 py-3 text-start"><bdi>{weight}</bdi></td>
+                      <td className="px-4 py-3 font-bold text-gray-900 text-start">{isRtl ? "پایه رزین (Resin Base)" : "Resin Base"}</td>
+                      <td className="px-4 py-3 text-start"><bdi>{resinBase}</bdi></td>
                     </tr>
                     <tr>
-                      <td className="px-4 py-3 font-bold text-gray-900 text-start">{isRtl ? "بسته‌بندی / تعداد در کارتن" : "Packaging / Pack Count"}</td>
-                      {/* جایگزینی با متغیر اصلاح‌شده */}
-                      <td className="px-4 py-3 text-start"><bdi>{displayPackaging}</bdi></td>
+                      <td className="px-4 py-3 font-bold text-gray-900 text-start">{isRtl ? "نوع حلال / تینر" : "Thinner / Solvent"}</td>
+                      <td className="px-4 py-3 text-start"><bdi>{thinnerType}</bdi></td>
                     </tr>
                     <tr className="bg-gray-50/50">
-                      <td className="px-4 py-3 font-bold text-gray-900 text-start">{isRtl ? "طعم و عصاره پایه" : "Base Flavor"}</td>
-                      <td className="px-4 py-3 text-start">{flavor}</td>
+                      <td className="px-4 py-3 font-bold text-gray-900 text-start">{isRtl ? "میزان پوشش‌دهی (m²/L)" : "Coverage Rate"}</td>
+                      <td className="px-4 py-3 text-start"><bdi>{coverage}</bdi></td>
                     </tr>
                     <tr>
-                      <td className="px-4 py-3 font-bold text-gray-900 text-start">{isRtl ? "ترکیبات اصلی" : "Main Ingredients"}</td>
-                      <td className="px-4 py-3 leading-relaxed text-start">{ingredients || "-"}</td>
+                      <td className="px-4 py-3 font-bold text-gray-900 text-start">{isRtl ? "زمان خشک شدن" : "Drying Time"}</td>
+                      <td className="px-4 py-3 leading-relaxed text-start">{dryingTimeDisplay}</td>
                     </tr>
                     <tr className="bg-gray-50/50">
-                      <td className="px-4 py-3 font-bold text-gray-900 text-start align-top">{isRtl ? "تاریخ انقضا (ماندگاری)" : "Shelf Life"}</td>
-                      <td className="px-4 py-3 text-start align-top">{shelfLife || "-"}</td>
+                      <td className="px-4 py-3 font-bold text-gray-900 text-start">{isRtl ? "کدهای استاندارد / شید" : "Color Codes / RAL"}</td>
+                      <td className="px-4 py-3 text-start"><bdi>{standardCodes}</bdi></td>
+                    </tr>
+                    <tr>
+                      <td className="px-4 py-3 font-bold text-gray-900 text-start">{isRtl ? "روش اجرا" : "Application Method"}</td>
+                      <td className="px-4 py-3 text-start">{applicationMethod}</td>
+                    </tr>
+                    <tr className="bg-gray-50/50">
+                      <td className="px-4 py-3 font-bold text-gray-900 text-start">{isRtl ? "بسته‌بندی‌های استاندارد" : "Packaging"}</td>
+                      <td className="px-4 py-3 text-start">{packagingSizes}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -164,19 +201,18 @@ const DatasheetPrint = forwardRef<HTMLDivElement, DatasheetPrintProps>(
                 <div className="border border-gray-200 rounded-xl p-3 flex flex-col items-center justify-center bg-white shadow-sm flex-1 min-h-[110px]">
                   <QRCode value={pageUrl} size={65} />
                   <div className="mt-2 text-center text-[9px] font-bold text-gray-500">
-                    {isRtl ? "اسکن برای مشاهده آنلاین" : "Scan to view online"}
+                    {isRtl ? "اسکن برای دریافت کاتالوگ رنگ" : "Scan to view color catalog"}
                   </div>
                 </div>
 
-                {/* تغییر طراحی کارت‌های ایزو و گواهینامه به صورت دو‌بخشی (لوگو + متن) */}
                 <div className="shrink-0 h-[48px] border border-gray-200 rounded-xl px-2.5 py-1.5 flex items-center bg-gray-50/50 shadow-sm gap-2.5">
                   <div className="w-8 h-8 bg-white border border-gray-100 rounded-lg flex items-center justify-center shrink-0 shadow-sm">
                     <Award size={16} className="text-blue-600" />
                   </div>
                   <div className="flex flex-col justify-center">
-                    <div className="text-[11px] font-black text-gray-800 leading-tight">ISO 22000</div>
+                    <div className="text-[11px] font-black text-gray-800 leading-tight">ISO 9001:2015</div>
                     <div className="text-[7px] font-bold text-gray-500 mt-0.5 text-start leading-tight">
-                      {isRtl ? "مدیریت ایمنی مواد غذایی" : "Food Safety Management"}
+                      {isRtl ? "مدیریت کیفیت تولید رنگ" : "Quality Management Standard"}
                     </div>
                   </div>
                 </div>
@@ -186,9 +222,9 @@ const DatasheetPrint = forwardRef<HTMLDivElement, DatasheetPrintProps>(
                     <ShieldCheck size={16} className="text-emerald-600" />
                   </div>
                   <div className="flex flex-col justify-center">
-                    <div className="text-[11px] font-black text-gray-800 leading-tight">HACCP</div>
+                    <div className="text-[11px] font-black text-gray-800 leading-tight">RAL Standard</div>
                     <div className="text-[7px] font-bold text-gray-500 mt-0.5 text-start leading-tight">
-                      {isRtl ? "تحلیل خطر و کنترل بحرانی" : "Hazard Analysis"}
+                      {isRtl ? "انطباق با کالیته رال آلمان" : "German RAL Color System"}
                     </div>
                   </div>
                 </div>
@@ -198,9 +234,9 @@ const DatasheetPrint = forwardRef<HTMLDivElement, DatasheetPrintProps>(
                     <CheckCircle size={16} className="text-amber-600" />
                   </div>
                   <div className="flex flex-col justify-center">
-                    <div className="text-[11px] font-black text-gray-800 leading-tight">GMP</div>
+                    <div className="text-[11px] font-black text-gray-800 leading-tight">ASTM Standards</div>
                     <div className="text-[7px] font-bold text-gray-500 mt-0.5 text-start leading-tight">
-                      {isRtl ? "شرایط خوب تولید" : "Good Manufacturing Practice"}
+                      {isRtl ? "تست چسبندگی و سایش" : "Adhesion & Wear Testing"}
                     </div>
                   </div>
                 </div>
@@ -210,21 +246,22 @@ const DatasheetPrint = forwardRef<HTMLDivElement, DatasheetPrintProps>(
 
             <div className="border border-emerald-200 bg-emerald-50/50 rounded-2xl p-4 text-center w-full mt-2">
               <h3 className="text-xs font-black text-emerald-800 mb-2">
-                {isRtl ? "تضمین کیفیت" : "Quality Assurance"}
+                {isRtl ? "تضمین اصالت و کنترل کیفیت رنگ" : "Quality & Performance Assurance"}
               </h3>
               <p className="text-[11px] font-medium text-emerald-900/80 leading-relaxed mx-auto text-justify sm:text-center">
                 {isRtl
-                  ? "این محصول تحت نظارت کامل واحد کنترل کیفیت شرکت تولید شده و مطابق استانداردهای بین‌المللی صنایع غذایی آزمایش و تأیید شده است."
-                  : "This product has been manufactured under strict laboratory quality control and complies with international food safety standards."}
+                  ? "این رنگ تحت نظارت دقیق آزمایشگاه شیمی و کنترل کیفی شرکت رنگ افغان فیضی تولید شده و دارای مقاومت عالی در برابر شرایط آب و هوایی افغانستان می‌باشد."
+                  : "Formulated and tested in Afghan Faizi Paint quality laboratories for maximum durability, opacity, and weather resistance."}
               </p>
             </div>
           </div>
 
+          {/* فوتر برگه فنی */}
           <div className="mt-auto pt-8 border-t border-dashed border-gray-300 flex justify-between items-center text-[10px] font-medium text-gray-400">
             <p className="text-start">
-              {isRtl ? "تأیید شده توسط واحد کنترل کیفیت (QC) جزیره گندم" : "Approved by Jazirah Gandum Quality Control (QC)"}
+              {isRtl ? "تأیید شده توسط واحد کنترل کیفیت (QC) رنگ افغان فیضی" : "Approved by Afghan Faizi Paint Quality Control (QC)"}
             </p>
-            <p className="text-end font-mono" dir="ltr">www.jazirahgandumco.com</p>
+            <p className="text-end font-mono" dir="ltr">www.afghanfaizipaint.com</p>
           </div>
 
         </div>

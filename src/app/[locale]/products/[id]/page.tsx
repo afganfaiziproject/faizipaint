@@ -9,7 +9,8 @@ import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import {
   ArrowLeft, FileText, Download, Star, Package, Droplets, Sparkles, Scale,
-  Activity, ShieldCheck, Printer, X, Calendar, Hash, List, ArrowRight, AlertTriangle
+  Activity, ShieldCheck, Printer, X, Calendar, Hash, List, ArrowRight, AlertTriangle,
+  FlaskConical, Layers, Clock, Tag
 } from "lucide-react";
 import { getProducts } from "@/actions/product";
 import { getCategories } from "@/actions/category";
@@ -182,8 +183,8 @@ export default function ProductDetailsPage() {
   };
 
   const shareText = isRtl
-    ? `📄 مشخصات فنی محصول: ${title}\n🌐 وب‌سایت: www.jazirahgandumco.com\n📞 واتس‌اپ: +93790710015\n🔗 لینک مشاهده و دریافت دیتاشیت:`
-    : `📄 Product Technical Datasheet: ${title}\n🌐 Website: www.jazirahgandumco.com\n📞 WhatsApp: +93790710015\n🔗 View & Download Datasheet:`;
+    ? `📄 مشخصات فنی رنگ: ${title}\n🌐 وب‌سایت: www.afghanfaizipaint.com\n📞 واتس‌اپ: +93790710015\n🔗 لینک مشاهده و دریافت دیتاشیت:`
+    : `📄 Paint Technical Datasheet: ${title}\n🌐 Website: www.afghanfaizipaint.com\n📞 WhatsApp: +93790710015\n🔗 View & Download Datasheet:`;
 
   const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
   const encodedShareMessage = encodeURIComponent(`${shareText}\n${shareUrl}`);
@@ -305,12 +306,12 @@ export default function ProductDetailsPage() {
                     transition={{ duration: 0.3, ease: customEase }}
                     className="relative w-full h-full flex items-center justify-center bg-white dark:bg-gray-900 rounded-[2.5rem] border border-gray-200/60 dark:border-gray-800/60 p-4 shadow-inner"
                   >
-                    {nutritionImage ? (
-                      <img src={nutritionImage} alt="Nutrition Facts" className="w-full h-full object-contain z-20" />
+                    {(p.images?.colorSwatch || (p.images?.gallery && p.images?.gallery[0])) ? (
+                      <img src={p.images?.colorSwatch || p.images?.gallery[0]} alt="Color Swatch" className="w-full h-full object-contain z-20" />
                     ) : (
                       <div className="flex flex-col items-center justify-center text-gray-400 gap-3">
                         <FileText size={48} className="opacity-40" />
-                        <span className="text-sm font-bold">{isRtl ? "جدول ارزش غذایی بارگذاری نشده است." : "Nutrition facts not uploaded."}</span>
+                        <span className="text-sm font-bold">{isRtl ? "کالیته رنگ برای این محصول بارگذاری نشده است." : "Color swatch not uploaded."}</span>
                       </div>
                     )}
                   </motion.div>
@@ -325,12 +326,12 @@ export default function ProductDetailsPage() {
               >
                 {isRtl ? "تصویر محصول" : "Product Image"}
               </button>
-              {nutritionImage && (
+              {(p.images?.colorSwatch || (p.images?.gallery && p.images?.gallery.length > 0)) && (
                 <button
                   onClick={() => setActiveImageTab('nutrition')}
                   className={`flex-1 py-3 rounded-xl text-xs font-black transition-all duration-300 ${activeImageTab === 'nutrition' ? 'bg-white dark:bg-gray-900 shadow-md text-amber-500 scale-[1.02]' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}
                 >
-                  {isRtl ? "ارزش غذایی" : "Nutrition Facts"}
+                  {isRtl ? "کالیته و شید رنگ" : "Color Swatch"}
                 </button>
               )}
             </div>
@@ -379,64 +380,65 @@ export default function ProductDetailsPage() {
 
             </motion.div>
 
+            {/* کارت‌های مشخصات تخصصی رنگ */}
             <motion.div variants={staggerContainer} initial="hidden" whileInView="show" viewport={{ once: false, amount: 0.1 }} className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-10">
 
-              {pPackaging && (
-                <motion.div variants={fadeUpItem} className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 flex flex-col gap-2 hover:border-amber-400 transition-colors">
-                  <Package className="text-amber-500" size={20} />
-                  <div>
-                    <p className="text-[10px] font-bold text-gray-400 uppercase">{isRtl ? "بسته‌بندی" : "Packaging"}</p>
-                    <p className="text-xs md:text-sm font-black text-gray-900 dark:text-white mt-0.5">{pPackaging}</p>
-                  </div>
-                </motion.div>
-              )}
+              <motion.div variants={fadeUpItem} className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 flex flex-col gap-2 hover:border-amber-400 transition-colors">
+                <FlaskConical className="text-amber-500" size={20} />
+                <div>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase">{isRtl ? "پایه رزین" : "Resin Base"}</p>
+                  <p className="text-xs md:text-sm font-black text-gray-900 dark:text-white mt-0.5">
+                    {(isRtl ? (p.specs?.resinBase?.fa || p.specs?.resinBase) : (p.specs?.resinBase?.en || p.specs?.resinBase?.fa || p.specs?.resinBase)) || pPackaging || (isRtl ? "رزین تخصصی" : "Special Resin")}
+                  </p>
+                </div>
+              </motion.div>
 
-              {pWeight && (
-                <motion.div variants={fadeUpItem} className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 flex flex-col gap-2 hover:border-amber-400 transition-colors">
-                  <Scale className="text-amber-500" size={20} />
-                  <div>
-                    <p className="text-[10px] font-bold text-gray-400 uppercase">{isRtl ? "وزن / حجم" : "Weight"}</p>
-                    <p className="text-xs md:text-sm font-black text-gray-900 dark:text-white mt-0.5" dir="ltr">{pWeight}</p>
-                  </div>
-                </motion.div>
-              )}
+              <motion.div variants={fadeUpItem} className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 flex flex-col gap-2 hover:border-amber-400 transition-colors">
+                <Droplets className="text-amber-500" size={20} />
+                <div>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase">{isRtl ? "نوع حلال / تینر" : "Thinner Type"}</p>
+                  <p className="text-xs md:text-sm font-black text-gray-900 dark:text-white mt-0.5">
+                    {(isRtl ? (p.specs?.thinnerType?.fa || p.specs?.thinnerType) : (p.specs?.thinnerType?.en || p.specs?.thinnerType?.fa || p.specs?.thinnerType)) || pFlavor || (isRtl ? "تینر اختصاصی" : "Specific Thinner")}
+                  </p>
+                </div>
+              </motion.div>
 
-              {packCount && (
-                <motion.div variants={fadeUpItem} className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 flex flex-col gap-2 hover:border-amber-400 transition-colors">
-                  <Hash className="text-amber-500" size={20} />
-                  <div>
-                    <p className="text-[10px] font-bold text-gray-400 uppercase">{isRtl ? "تعداد در بسته" : "Pack Count"}</p>
-                    <p className="text-xs md:text-sm font-black text-gray-900 dark:text-white mt-0.5">{packCount}</p>
-                  </div>
-                </motion.div>
-              )}
+              <motion.div variants={fadeUpItem} className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 flex flex-col gap-2 hover:border-amber-400 transition-colors">
+                <Layers className="text-amber-500" size={20} />
+                <div>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase">{isRtl ? "میزان پوشش‌دهی" : "Coverage Rate"}</p>
+                  <p className="text-xs md:text-sm font-black text-gray-900 dark:text-white mt-0.5" dir="ltr">
+                    {(isRtl ? (p.specs?.coverage?.fa || p.specs?.coverage) : (p.specs?.coverage?.en || p.specs?.coverage?.fa || p.specs?.coverage)) || pWeight || "10-12 m²/L"}
+                  </p>
+                </div>
+              </motion.div>
 
-              {pFlavor && (
-                <motion.div variants={fadeUpItem} className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 flex flex-col gap-2 hover:border-amber-400 transition-colors">
-                  <Droplets className="text-amber-500" size={20} />
-                  <div>
-                    <p className="text-[10px] font-bold text-gray-400 uppercase">{isRtl ? "طعم و عصاره" : "Flavor"}</p>
-                    <p className="text-xs md:text-sm font-black text-gray-900 dark:text-white mt-0.5">{pFlavor}</p>
-                  </div>
-                </motion.div>
-              )}
+              <motion.div variants={fadeUpItem} className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 flex flex-col gap-2 hover:border-amber-400 transition-colors">
+                <Clock className="text-amber-500" size={20} />
+                <div>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase">{isRtl ? "زمان خشک شدن" : "Drying Time"}</p>
+                  <p className="text-xs md:text-sm font-black text-gray-900 dark:text-white mt-0.5">
+                    {p.specs?.dryingTime?.surfaceDry?.fa ? `${p.specs.dryingTime.surfaceDry.fa} (سطحی)` : shelfLife || (isRtl ? "۳۰ دقیقه سطحی" : "30 min surface")}
+                  </p>
+                </div>
+              </motion.div>
 
-              {shelfLife && (
-                <motion.div variants={fadeUpItem} className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 flex flex-col gap-2 hover:border-amber-400 transition-colors">
-                  <Calendar className="text-amber-500" size={20} />
-                  <div>
-                    <p className="text-[10px] font-bold text-gray-400 uppercase">{isRtl ? "تاریخ انقضا" : "Shelf Life"}</p>
-                    <p className="text-xs md:text-sm font-black text-gray-900 dark:text-white mt-0.5">{shelfLife}</p>
-                  </div>
-                </motion.div>
-              )}
+              <motion.div variants={fadeUpItem} className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 flex flex-col gap-2 hover:border-amber-400 transition-colors">
+                <Tag className="text-amber-500" size={20} />
+                <div>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase">{isRtl ? "کد رال / استاندارد" : "Color Code / RAL"}</p>
+                  <p className="text-xs md:text-sm font-black text-gray-900 dark:text-white mt-0.5">
+                    {p.specs?.colorCode || (p.specs?.standardCodes && p.specs.standardCodes[0]) || (isRtl ? "استاندارد RAL" : "RAL Standard")}
+                  </p>
+                </div>
+              </motion.div>
 
               <motion.div variants={fadeUpItem} className="bg-gray-50 dark:bg-gray-800/50 p-4 rounded-2xl border border-gray-100 dark:border-gray-700 flex flex-col gap-2 hover:border-amber-400 transition-colors">
                 <Activity className="text-amber-500" size={20} />
                 <div>
-                  <p className="text-[10px] font-bold text-gray-400 uppercase">{isRtl ? "وضعیت تأمین" : "Supply Status"}</p>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase">{isRtl ? "وضعیت تولید و تأمین" : "Production Status"}</p>
                   <p className="text-xs md:text-sm font-black text-emerald-500 mt-0.5">
-                    {statusName || p.status || (isRtl ? "نامشخص" : "Unknown")}
+                    {statusName || p.status || (isRtl ? "موجود در خط تولید" : "Active Production")}
                   </p>
                 </div>
               </motion.div>

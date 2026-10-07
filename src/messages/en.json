@@ -1,141 +1,141 @@
 {
   "Navbar": {
     "home": "Home",
-    "products": "Products",
-    "brands": "Brands",
+    "products": "Paint Products",
+    "brands": "Production Lines",
     "about": "About Us",
     "contact": "Contact",
     "dashboard": "Dashboard"
   },
   "Index": {
-    "title": "Jazirah Gandum | Premium Products",
-    "description": "Leading the food industry with modern production lines and organic ingredients."
+    "title": "Afghan Faizi Paint | Premium Architectural & Industrial Coatings",
+    "description": "Leading manufacturer of architectural, industrial, instant, and decorative paints with superior coverage and durability in Afghanistan."
   },
   "Products": {
     "title_part1": "Premium",
-    "title_part2": "Production Line",
-    "description": "An unparalleled variety of beverages and snacks with global standards.",
-    "view_catalog": "View Catalog",
+    "title_part2": "Afghan Faizi Paints",
+    "description": "An unparalleled portfolio of oil, plastic/emulsion, instant, and industrial paints engineered to global standards.",
+    "view_catalog": "View Color Catalog",
     "badges": {
       "best": "Best Seller",
-      "new": "New",
+      "new": "New Formula",
       "popular": "Popular",
-      "special": "Special"
+      "special": "Industrial Special"
     },
     "items": {
-      "energy": { "title": "Max Energy", "desc": "Energy bomb with various flavors", "category": "Beverage" },
-      "orange": { "title": "Pure Orange", "desc": "100% natural", "category": "Juice" },
-      "chips": { "title": "Crispy Chips", "desc": "Roasted with sunflower oil", "category": "Snack" },
-      "cheddar": { "title": "Cheddar Puffs", "desc": "Authentic cheese flavor", "category": "Snack" },
-      "popcorn": { "title": "Butter Popcorn", "desc": "Perfect movie companion", "category": "Snack" },
-      "coffee": { "title": "Espresso Coffee", "desc": "Special roast with delightful aroma", "category": "Beverage" },
-      "tea": { "title": "Organic Green Tea", "desc": "Soothing and nutritious", "category": "Beverage" },
-      "chocolate": { "title": "85% Dark Chocolate", "desc": "Pure and energizing", "category": "Snacks" },
-      "biscuit": { "title": "Bran Biscuit", "desc": "Healthy snack", "category": "Snack" },
-      "cake": { "title": "Orange Cake", "desc": "Freshly baked", "category": "Snack" }
+      "oil_gloss": { "title": "Premium Gloss Oil Paint", "desc": "Superior coverage with pure alkyd resin", "category": "Oil Paint" },
+      "oil_matt": { "title": "Matt Architectural Oil Paint", "desc": "Highly washable & moisture resistant", "category": "Oil Paint" },
+      "plastic_emulsion": { "title": "First-Grade Plastic Emulsion", "desc": "Water-based, odorless & fast drying", "category": "Plastic Paint" },
+      "acrylic_exterior": { "title": "Silicone Acrylic Exterior Paint", "desc": "Waterproof, UV-resistant weather coating", "category": "Plastic Paint" },
+      "instant_sealer": { "title": "Instant Wood Sealer & Lacquer", "desc": "Fast-drying with crystal clarity and smooth sanding", "category": "Instant Paint" },
+      "instant_lacquer": { "title": "Nitrocellulose Gloss Lacquer", "desc": "Ultra-fast drying for wood and metal finishing", "category": "Instant Paint" },
+      "epoxy_floor": { "title": "Industrial Epoxy Flooring", "desc": "Heavy-duty mechanical & chemical resistance", "category": "Industrial Paint" },
+      "anti_rust": { "title": "Alkyd Industrial Anti-Rust Primer", "desc": "Permanent corrosion defense for metal structures", "category": "Oil Paint" },
+      "polyurethane": { "title": "Industrial Polyurethane Coating", "desc": "Outstanding endurance in extreme outdoor weather", "category": "Industrial Paint" },
+      "thinner_instant": { "title": "Faizi Dedicated Instant Thinner", "desc": "High solubility & smooth balanced evaporation", "category": "Thinners & Solvents" }
     }
   },
   "Hero": {
     "slides": {
       "slide1": {
-        "title": "Endless Wheat Energy",
-        "subtitle": "Extreme Energy Drink",
-        "description": "An explosive blend of vitamins and natural caffeine for your challenging days. Take your focus to the peak!"
+        "title": "Enduring Brilliance on Every Wall",
+        "subtitle": "Architectural & Decorative Paints",
+        "description": "Advanced formulations with supreme coverage and unmatched resilience against Afghanistan's diverse climates."
       },
       "slide2": {
-        "title": "Crispy and Exciting",
-        "subtitle": "Special Pepper & Cheese Chips",
-        "description": "Thin slices of organic potatoes with authentic spices. A taste you'll never forget, with a crunch you can hear in every bite."
+        "title": "High-Performance Surface Protection",
+        "subtitle": "Industrial & Epoxy Coatings",
+        "description": "Heavy-duty anti-corrosion primers, industrial epoxy flooring, and road marking paints compliant with international codes."
       },
       "slide3": {
-        "title": "Your Home Cinema",
-        "subtitle": "Special Butter Popcorn",
-        "description": "Premium corn kernels popped with gentle heat and natural butter. The best companion for watching movies and series."
+        "title": "Artistry on Wood and Metal",
+        "subtitle": "Instant Sealers, Lacquers & Finishes",
+        "description": "Rapid curing, exquisite gloss clarity, and superior hardness for furniture, cabinetry, and automotive crafts."
       }
     },
-    "main_placeholder": "MAIN PRODUCT",
-    "view_products": "View Products"
+    "main_placeholder": "PAINT PRODUCT",
+    "view_products": "Explore Product Catalog"
   },
   "Brands": {
-    "title_part1": "Our Family of",
-    "title_part2": "Brands",
-    "description": "Each brand, a new story. Variety and quality brought together under the Jazirah Gandum umbrella.",
-    "view_brand": "View Brand",
+    "title_part1": "Specialized",
+    "title_part2": "Faizi Production Lines",
+    "description": "Advanced production lines for architectural, industrial, wood finishing, and specialized resin formulations under Afghan Faizi Paint.",
+    "view_brand": "View Line",
     "items": {
-      "brand1": { "name": "Chic", "desc": "Professional Energy Drinks" },
-      "brand2": { "name": "Khandan", "desc": "Crispy & Cheesy Snacks" },
-      "brand3": { "name": "Sadaf", "desc": "Delicious Popcorn" },
-      "brand4": { "name": "Seven Sky", "desc": "100% Natural Juices" },
-      "brand5": { "name": "M4", "desc": "High-Quality Energy" },
-      "brand6": { "name": "Nik", "desc": "Carbonated Beverages" }
+      "brand1": { "name": "Faizi Decorative", "desc": "Architectural Emulsions & Acrylics" },
+      "brand2": { "name": "Faizi Industrial", "desc": "Heavy-Duty Epoxy & Polyurethane Systems" },
+      "brand3": { "name": "Faizi Instant (Quick-Dry)", "desc": "Wood Sealers, Clear Coats & Nitro Lacquers" },
+      "brand4": { "name": "Faizi Alkyd Enamel", "desc": "Long-Lasting High-Gloss & Matt Oil Paints" },
+      "brand5": { "name": "Faizi Chemicals", "desc": "Instant, Mineral & Industrial Thinners" },
+      "brand6": { "name": "Faizi Resins", "desc": "Synthetic Water-Borne & Solvent Resins" }
     }
   },
   "AboutFactory": {
-    "badge": "Production Power",
-    "title_part1": "Merging",
-    "title_part2": "Nature",
-    "title_part3": "Technology",
-    "description": "Jazirah Gandum factories are committed to providing products that guarantee family health.",
-    "virtual_tour": "Virtual Factory Tour",
+    "badge": "Manufacturing Capability",
+    "title_part1": "Technical Prowess",
+    "title_part2": "Exceptional Quality",
+    "title_part3": "Lasting Durability",
+    "description": "Afghan Faizi Paint manufacturing plants are dedicated to formulating premium architectural and industrial coatings.",
+    "virtual_tour": "Virtual Plant Tour",
     "features": {
-      "global": { "title": "Global Standards", "desc": "Produced according to international health protocols" },
-      "natural": { "title": "Natural Ingredients", "desc": "Using the best organic raw materials" },
-      "quality": { "title": "Quality Assurance", "desc": "Continuous monitoring by advanced laboratories" },
-      "tech": { "title": "Modern Technology", "desc": "State-of-the-art industrial machinery" }
+      "global": { "title": "International Standards", "desc": "Produced according to RAL and ISO standards" },
+      "natural": { "title": "High-Grade Pigments", "desc": "Formulated with pure resins and German pigments" },
+      "quality": { "title": "QC Laboratories", "desc": "Rigorous testing for viscosity, opacity and drying times" },
+      "tech": { "title": "Modern Machinery", "desc": "State-of-the-art high-speed dispersers and pearl mills" }
     },
     "stats": {
-      "products": "Product Variety",
-      "customers": "Active Customers",
-      "agents": "Sales Agents",
+      "products": "Color Shades",
+      "customers": "Executed Projects",
+      "agents": "Provincial Agencies",
       "lines": "Automated Lines"
     }
   },
   "WhyUs": {
     "title_part1": "Why",
-    "title_part2": "Jazirah Gandum?",
+    "title_part2": "Afghan Faizi Paint?",
     "features": {
-      "feature1": { "title": "100% Organic Ingredients", "desc": "Using the freshest and most natural raw materials without harmful preservatives." },
-      "feature2": { "title": "Global Standards", "desc": "Produced in the most advanced factory lines following international protocols." },
-      "feature3": { "title": "Exclusive Flavors", "desc": "Special formulations and combinations you won't experience in any other product." },
-      "feature4": { "title": "Quality Assurance", "desc": "Multi-stage quality control to ensure the health and crispness of every package." }
+      "feature1": { "title": "Superior Coverage", "desc": "Delivers 10 to 12 m²/Liter coverage with maximum economic efficiency." },
+      "feature2": { "title": "Engineered for Climate", "desc": "High resistance to intense sun UV, dust, and extreme temperature fluctuations." },
+      "feature3": { "title": "Extensive Color Range", "desc": "Over 500 standard RAL and architectural shades with excellent lightfastness." },
+      "feature4": { "title": "Guaranteed Quality", "desc": "Comprehensive laboratory inspection from formulation to packaging." }
     }
   },
   "Testimonials": {
     "items": {
-      "item1": { "text": "The taste of the SHIK pepper chips was exactly what I've been looking for. Fantastic crispness and authentic flavor.", "author": "Mohammad Parsa", "role": "Graphic Designer" },
-      "item2": { "text": "M4 Energy has become my pre-workout routine. The taste is unique and it provides sustained energy.", "author": "Mohammad Rezaei", "role": "Professional Athlete" },
-      "item3": { "text": "Premium packaging and high-quality popcorn made our movie nights much more exciting.", "author": "Ali Hosseini", "role": "Cinema Lover" }
+      "item1": { "text": "Afghan Faizi exterior acrylic delivered outstanding weatherproofing on our tower projects in Kabul.", "author": "Eng. Ahmad Wali", "role": "Civil Project Contractor" },
+      "item2": { "text": "Faizi instant sealer and lacquer sand beautifully and dry in minutes. It's our primary choice in Herat.", "author": "Master Farid Ahmad", "role": "Wood Furniture Manufacturer" },
+      "item3": { "text": "The gloss retention and adhesion of Faizi anti-rust and oil enamels on steel structures are unmatched.", "author": "Haji Gol Mohammad", "role": "Paint Distributor in Mazar-i-Sharif" }
     }
   },
   "CTA": {
     "title_part1": "Join the",
-    "title_part2": "Jazirah Gandum",
-    "title_part3": "Family",
-    "description": "Enter your phone number or email to get notified about our latest products, new flavors, and special discounts.",
+    "title_part2": "Afghan Faizi Paint",
+    "title_part3": "Network",
+    "description": "Contact us to receive the latest provincial price lists, product catalogs, and official dealership terms.",
     "input_placeholder": "Phone number or email...",
-    "button_text": "Subscribe",
-    "success_title": "Successfully Subscribed!",
-    "success_message": "We will send you exciting news very soon."
+    "button_text": "Submit Inquiry",
+    "success_title": "Inquiry Received!",
+    "success_message": "Our commercial sales team will contact you shortly."
   },
   "Footer": {
-    "about_desc": "Jazirah Gandum Production Group, a pioneer in the food and beverage industry with global standards. We are committed to providing the best flavors and highest quality for families.",
-    "quick_links": "Quick Access",
+    "about_desc": "Afghan Faizi Paint Co., pioneer in formulating and manufacturing premium architectural, industrial, resin, and thinner products with highest standards across Afghanistan.",
+    "quick_links": "Quick Links",
     "contact_info": "Contact Info",
-    "address": "No. 45, Industry St, Phase 2, Industrial Parks, Kabul, Afghanistan",
-    "copyright": "All rights reserved.",
+    "address": "Industrial City, Phase 2, Entrepreneur Blvd, Herat, Afghanistan",
+    "copyright": "All rights reserved by Afghan Faizi Paint Co.",
     "privacy": "Privacy Policy",
     "terms": "Terms of Use",
     "newsletter": {
-      "title": "Newsletter Subscription",
-      "desc": "Enter your email to receive the latest product news and special conditions for agencies.",
-      "placeholder": "Your email..."
+      "title": "Price List & Newsletter",
+      "desc": "Subscribe to receive latest provincial price sheets and technical color charts.",
+      "placeholder": "Your email address..."
     },
     "links": {
-      "about": "About Us & History",
-      "products": "Products & Catalog",
-      "factory": "Production Lines & Lab",
-      "agencies": "Agency Request",
-      "blog": "News & Media"
+      "about": "About Company & Factory",
+      "products": "Products & Catalogs",
+      "factory": "Laboratory & Quality Control",
+      "agencies": "Provincial Dealerships",
+      "blog": "Paint Articles & Technical Guides"
     }
   }
 }

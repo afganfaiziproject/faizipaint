@@ -10,16 +10,17 @@ export default getRequestConfig(async (context) => {
 
   const validLocale = currentLocale || 'fa';
 
-  if (!['fa', 'en'].includes(validLocale)) notFound();
+  if (!['fa', 'en', 'ps'].includes(validLocale)) notFound();
 
   // ۲. وارد کردن مستقیم و ایمن فایل‌ها (برای جلوگیری از باگ Turbopack)
   let userMessages;
   if (validLocale === 'en') {
-    // خواندن فایل انگلیسی
     const enFile = await import('../messages/en.json');
     userMessages = enFile.default || enFile;
+  } else if (validLocale === 'ps') {
+    const psFile = await import('../messages/ps.json');
+    userMessages = psFile.default || psFile;
   } else {
-    // خواندن فایل فارسی
     const faFile = await import('../messages/fa.json');
     userMessages = faFile.default || faFile;
   }

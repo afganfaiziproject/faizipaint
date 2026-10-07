@@ -26,9 +26,9 @@ export default async function FooterWrapper() {
 
   const contactInfo = {
     phone: (hqData?.phone || "+93 790 71 00 15") as string,
-    email: (hqData?.email || "info@jazirah-gandum.com") as string,
-    faAddress: (hqData?.faAddress || "دفتر مرکزی، جزیره گندم") as string,
-    enAddress: (hqData?.enAddress || "HQ Office, Jazirah Gandum") as string,
+    email: (hqData?.email || "info@afghanfaizipaint.com") as string,
+    faAddress: (hqData?.faAddress || "دفتر مرکزی: شهرک صنعتی، فاز ۲، هرات، افغانستان") as string,
+    enAddress: (hqData?.enAddress || "HQ Office: Industrial City, Phase 2, Herat, Afghanistan") as string,
     // پاس دادن تک‌تک شبکه‌های اجتماعی مطابق با تایپ‌های Footer
     wa: getSocialValue('whatsapp', 'wa'),
     tg: getSocialValue('telegram', 'tg'),

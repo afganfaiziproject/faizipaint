@@ -4,7 +4,8 @@ import React, { useState, useEffect } from "react";
 import {
   Plus, Search, Edit3, Trash2, Image as ImageIcon, GripVertical,
   X, Upload, CheckCircle2, Wand2, Loader2, Star, ChevronLeft, ChevronRight,
-  LayoutGrid, List as ListIcon, AlignJustify, Filter, ArrowDownAZ, ArrowUpZA, ArrowUpDown
+  LayoutGrid, List as ListIcon, AlignJustify, Filter, ArrowDownAZ, ArrowUpZA, ArrowUpDown,
+  FileText, ShieldAlert, Layers, Droplets, Clock, Paintbrush, Award
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAdminShortcuts } from "../hooks/useAdminShortcuts";
@@ -44,32 +45,62 @@ export default function ProductsManager() {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [viewMode, setViewMode] = useState<"list" | "compact" | "grid">("list");
 
-  const [formData, setFormData] = useState({
+  // فرم محصولات تخصصی رنگ افغان فیضی
+  const initialFormState = {
     _id: "",
     brandId: "",
     slug: "",
     faTitle: "",
     enTitle: "",
-    mainCat: "",
+    psTitle: "",
+    mainCat: "oil",
     category: "",
     faDesc: "",
     enDesc: "",
-    flavor: "",
-    weight: "",
-    packaging: "",
-    faShelfLife: "",
-    enShelfLife: "",
-    faIngredients: "",
-    enIngredients: "",
-    itemsPerPackage: "",
+    psDesc: "",
     visibilityStatus: "published",
     isFeatured: false,
+    
+    // مشخصات فنی مهندسی رنگ
+    resinBaseFa: "",
+    resinBaseEn: "",
+    thinnerTypeFa: "",
+    thinnerTypeEn: "",
+    surfaceDryFa: "",
+    surfaceDryEn: "",
+    fullDryFa: "",
+    fullDryEn: "",
+    recoatIntervalFa: "",
+    recoatIntervalEn: "",
+    coverageFa: "",
+    coverageEn: "",
+    coverageRate: 10,
+    colorCode: "",
+    standardCodes: "",
+    glossLevelFa: "",
+    glossLevelEn: "",
+    applicationMethodFa: "",
+    applicationMethodEn: "",
+    packagingSizes: "۱ لیتری، گالن ۴ لیتری، حلب ۲۰ لیتری",
+    density: "",
+    viscosity: "",
+    washabilityFa: "",
+    shelfLifeFa: "",
+    vocLevel: "",
+    
+    // هشدارها و ایمنی
     hasWarning: false,
     warningMessageFa: "",
     warningMessageEn: "",
+    warningMessagePs: "",
+    
+    // تصاویر و اسناد فنی (TDS)
     mainImage: "",
-    nutritionImage: ""
-  });
+    colorSwatchImage: "",
+    datasheetPdf: ""
+  };
+
+  const [formData, setFormData] = useState(initialFormState);
 
   const tabList = ["basic", "specs", "media"];
 
@@ -100,48 +131,7 @@ export default function ProductsManager() {
 
   const mainCategories = categoriesList.filter(c => c.iconName === 'main');
   const subCategories = categoriesList.filter(c => c.parent === formData.mainCat && c.iconName !== 'main');
-
-  const filterSpecs = (iconName: string) => {
-    return categoriesList.filter(c => {
-      if (c.iconName !== iconName) return false;
-      if (['all', formData.mainCat, formData.category].includes(c.parent)) return true;
-      if (iconName === 'packaging' && formData.packaging === c.slug) return true;
-      if (iconName === 'flavor' && formData.flavor === c.slug) return true;
-      if (iconName === 'weight' && formData.weight === c.slug) return true;
-      return false;
-    });
-  };
-
-  const packagingOptions = filterSpecs('packaging');
-  const flavorOptions = filterSpecs('flavor');
-  const weightOptions = filterSpecs('weight');
   const statusOptions = categoriesList.filter(c => c.iconName === 'status');
-
-  const findCatSlug = (val: string) => {
-    if (!val) return "";
-    const cleanVal = String(val).trim();
-    const c = categoriesList.find(x =>
-      String(x.faName).trim() === cleanVal ||
-      String(x.slug).trim() === cleanVal ||
-      String(x.enName).trim() === cleanVal ||
-      String(x._id) === cleanVal
-    );
-    return c ? c.slug : cleanVal;
-  };
-
-  const getSpecName = (slug: string, fallback: string) => {
-    if (!slug) return fallback || "-";
-    const cat = categoriesList.find(c => c.slug === slug || c._id === slug);
-    if (cat) return cat.faName;
-
-    if (fallback && typeof fallback === 'string' && fallback.match(/-[0-9]+$/)) {
-      return fallback.replace(/-[0-9]+$/, '').replace(/-/g, ' ');
-    }
-    if (slug && typeof slug === 'string' && slug.match(/-[0-9]+$/)) {
-      return slug.replace(/-[0-9]+$/, '').replace(/-/g, ' ');
-    }
-    return fallback || slug || "-";
-  };
 
   const handleEdit = (product: any) => {
     setEditMode(true);
@@ -149,27 +139,51 @@ export default function ProductsManager() {
       _id: product._id,
       brandId: product.brandId?._id || product.brandId || "",
       slug: product.slug || "",
-      faTitle: product.faTitle || "",
-      enTitle: product.enTitle || "",
-      mainCat: product.mainCat || "",
+      faTitle: product.faTitle || product.title?.fa || "",
+      enTitle: product.enTitle || product.title?.en || "",
+      psTitle: product.psTitle || product.title?.ps || "",
+      mainCat: product.mainCat || "oil",
       category: product.category || "",
       visibilityStatus: product.status || "published",
       isFeatured: product.isFeatured || false,
+      faDesc: product.faDesc || product.description?.fa || "",
+      enDesc: product.enDesc || product.description?.en || "",
+      psDesc: product.psDesc || product.description?.ps || "",
+      
+      resinBaseFa: product.specs?.resinBase?.fa || "",
+      resinBaseEn: product.specs?.resinBase?.en || "",
+      thinnerTypeFa: product.specs?.thinnerType?.fa || "",
+      thinnerTypeEn: product.specs?.thinnerType?.en || "",
+      surfaceDryFa: product.specs?.dryingTime?.surfaceDry?.fa || "",
+      surfaceDryEn: product.specs?.dryingTime?.surfaceDry?.en || "",
+      fullDryFa: product.specs?.dryingTime?.fullDry?.fa || "",
+      fullDryEn: product.specs?.dryingTime?.fullDry?.en || "",
+      recoatIntervalFa: product.specs?.dryingTime?.recoatInterval?.fa || "",
+      recoatIntervalEn: product.specs?.dryingTime?.recoatInterval?.en || "",
+      coverageFa: product.specs?.coverage?.fa || "",
+      coverageEn: product.specs?.coverage?.en || "",
+      coverageRate: product.specs?.coverageRate || 10,
+      colorCode: product.specs?.colorCode || "",
+      standardCodes: Array.isArray(product.specs?.standardCodes) ? product.specs.standardCodes.join(', ') : (product.specs?.standardCodes || ""),
+      glossLevelFa: product.specs?.glossLevel?.fa || "",
+      glossLevelEn: product.specs?.glossLevel?.en || "",
+      applicationMethodFa: product.specs?.applicationMethod?.fa || "",
+      applicationMethodEn: product.specs?.applicationMethod?.en || "",
+      packagingSizes: Array.isArray(product.specs?.packagingSizes) ? product.specs.packagingSizes.join('، ') : (product.specs?.packagingSizes || "۱ لیتری، گالن ۴ لیتری، حلب ۲۰ لیتری"),
+      density: product.specs?.density || "",
+      viscosity: product.specs?.viscosity || "",
+      washabilityFa: product.specs?.washability?.fa || "",
+      shelfLifeFa: product.specs?.shelfLife?.fa || "",
+      vocLevel: product.specs?.vocLevel || "",
+      
       hasWarning: product.hasWarning || false,
-      warningMessageFa: product.warningMessageFa || "",
-      warningMessageEn: product.warningMessageEn || "",
-      faDesc: product.faDesc || "",
-      enDesc: product.enDesc || "",
-      flavor: findCatSlug(product.specs?.flavorFa || product.specs?.flavor || ""),
-      weight: findCatSlug(product.specs?.weightFa || product.specs?.weight || ""),
-      packaging: findCatSlug(product.specs?.packagingFa || product.specs?.packaging || product.packaging || ""),
-      faShelfLife: product.specs?.shelfLifeFa || "",
-      enShelfLife: product.specs?.shelfLifeEn || "",
-      faIngredients: product.specs?.ingredientsFa || "",
-      enIngredients: product.specs?.ingredientsEn || "",
-      itemsPerPackage: product.specs?.itemsPerPackage || "",
+      warningMessageFa: product.warningMessageFa || product.warningMessage?.fa || "",
+      warningMessageEn: product.warningMessageEn || product.warningMessage?.en || "",
+      warningMessagePs: product.warningMessagePs || product.warningMessage?.ps || "",
+      
       mainImage: product.images?.main || "",
-      nutritionImage: product.images?.nutrition || ""
+      colorSwatchImage: product.images?.colorSwatch || "",
+      datasheetPdf: product.images?.datasheetPdf || ""
     });
     setActiveTab("basic");
     setIsModalOpen(true);
@@ -177,32 +191,10 @@ export default function ProductsManager() {
 
   const handleAddNew = () => {
     setEditMode(false);
-    const firstMainCat = mainCategories.length > 0 ? mainCategories[0].slug : "";
+    const firstMainCat = mainCategories.length > 0 ? mainCategories[0].slug : "oil";
     setFormData({
-      _id: "",
-      brandId: "",
-      slug: "",
-      faTitle: "",
-      enTitle: "",
-      mainCat: firstMainCat,
-      category: "",
-      faDesc: "",
-      enDesc: "",
-      flavor: "",
-      weight: "",
-      packaging: "",
-      faShelfLife: "",
-      enShelfLife: "",
-      faIngredients: "",
-      enIngredients: "",
-      itemsPerPackage: "",
-      visibilityStatus: "published",
-      isFeatured: false,
-      hasWarning: false,
-      warningMessageFa: "",
-      warningMessageEn: "",
-      mainImage: "",
-      nutritionImage: ""
+      ...initialFormState,
+      mainCat: firstMainCat
     });
     setActiveTab("basic");
     setIsModalOpen(true);
@@ -211,86 +203,115 @@ export default function ProductsManager() {
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.faTitle.trim() || !formData.slug.trim() || !formData.brandId || !formData.mainCat || !formData.category) {
-      showToast("لطفاً تمامی فیلدهای ستاره‌دار (شامل برند، گروه و دسته‌بندی) را تکمیل کنید.", "warning");
+      showToast("لطفاً تمامی فیلدهای ستاره‌دار (نام، شناسه، برند، گروه و دسته‌بندی) را تکمیل کنید.", "warning");
       return;
     }
 
-    const selFlavor = categoriesList.find(c => c.slug === formData.flavor || c._id === formData.flavor || c.faName === formData.flavor);
-    const selPack = categoriesList.find(c => c.slug === formData.packaging || c._id === formData.packaging || c.faName === formData.packaging);
-    const selWeight = categoriesList.find(c => c.slug === formData.weight || c._id === formData.weight || c.faName === formData.weight);
+    const standardCodesArr = formData.standardCodes
+      ? formData.standardCodes.split(',').map(s => s.trim()).filter(Boolean)
+      : [];
+
+    const packagingSizesArr = formData.packagingSizes
+      ? formData.packagingSizes.split(/[,،]/).map(s => s.trim()).filter(Boolean)
+      : [];
 
     const payload = {
       brandId: formData.brandId,
+      title: {
+        fa: formData.faTitle,
+        en: formData.enTitle,
+        ps: formData.psTitle
+      },
       faTitle: formData.faTitle,
       enTitle: formData.enTitle,
+      psTitle: formData.psTitle,
       slug: formData.slug.toLowerCase().replace(/\s+/g, '-'),
       mainCat: formData.mainCat,
       category: formData.category,
       status: formData.visibilityStatus,
       isFeatured: formData.isFeatured,
       hasWarning: formData.hasWarning,
+      warningMessage: {
+        fa: formData.warningMessageFa,
+        en: formData.warningMessageEn,
+        ps: formData.warningMessagePs
+      },
       warningMessageFa: formData.warningMessageFa,
       warningMessageEn: formData.warningMessageEn,
+      warningMessagePs: formData.warningMessagePs,
+      description: {
+        fa: formData.faDesc,
+        en: formData.enDesc,
+        ps: formData.psDesc
+      },
       faDesc: formData.faDesc,
       enDesc: formData.enDesc,
+      psDesc: formData.psDesc,
       order: editMode ? undefined : products.length,
       specs: {
-        flavorFa: selFlavor ? selFlavor.faName : formData.flavor,
-        flavorEn: selFlavor ? selFlavor.enName : formData.flavor,
-        weightFa: selWeight ? selWeight.faName : formData.weight,
-        weightEn: selWeight ? selWeight.enName : formData.weight,
-        weight: selWeight ? selWeight.slug : formData.weight,
-        packagingFa: selPack ? selPack.faName : formData.packaging,
-        packagingEn: selPack ? selPack.enName : formData.packaging,
-        packaging: selPack ? selPack.slug : formData.packaging,
-        shelfLifeFa: formData.faShelfLife,
-        shelfLifeEn: formData.enShelfLife,
-        ingredientsFa: formData.faIngredients,
-        ingredientsEn: formData.enIngredients,
-        itemsPerPackage: formData.itemsPerPackage,
+        resinBase: { fa: formData.resinBaseFa, en: formData.resinBaseEn },
+        thinnerType: { fa: formData.thinnerTypeFa, en: formData.thinnerTypeEn },
+        dryingTime: {
+          surfaceDry: { fa: formData.surfaceDryFa, en: formData.surfaceDryEn },
+          fullDry: { fa: formData.fullDryFa, en: formData.fullDryEn },
+          recoatInterval: { fa: formData.recoatIntervalFa, en: formData.recoatIntervalEn }
+        },
+        coverage: { fa: formData.coverageFa, en: formData.coverageEn },
+        coverageRate: Number(formData.coverageRate) || 10,
+        standardCodes: standardCodesArr,
+        colorCode: formData.colorCode,
+        glossLevel: { fa: formData.glossLevelFa, en: formData.glossLevelEn },
+        applicationMethod: { fa: formData.applicationMethodFa, en: formData.applicationMethodEn },
+        packagingSizes: packagingSizesArr,
+        density: formData.density,
+        viscosity: formData.viscosity,
+        washability: { fa: formData.washabilityFa, en: "" },
+        shelfLife: { fa: formData.shelfLifeFa, en: "" },
+        vocLevel: formData.vocLevel
       },
       images: {
-        main: formData.mainImage || "https://placehold.co/400x400/png",
+        main: formData.mainImage || "https://placehold.co/500x500/png?text=Afghan+Faizi+Paint",
         gallery: [],
-        nutrition: formData.nutritionImage || ""
+        colorSwatch: formData.colorSwatchImage || "",
+        datasheetPdf: formData.datasheetPdf || ""
       }
     };
 
     if (editMode && formData._id) {
       const res = await updateProduct(formData._id, payload);
       if (res.success) {
-        showToast("محصول با موفقیت ویرایش شد.", "success");
+        showToast("محصول رنگ با موفقیت ویرایش شد.", "success");
         setIsModalOpen(false);
         fetchData();
       } else showToast(res.error || "خطا در ویرایش محصول.", "error");
     } else {
       const res = await createProduct(payload);
       if (res.success) {
-        showToast("محصول جدید با موفقیت ثبت شد.", "success");
+        showToast("محصول رنگ جدید با موفقیت ثبت شد.", "success");
         setIsModalOpen(false);
         fetchData();
       } else showToast("خطا در ثبت: " + res.error, "error");
     }
   };
 
-  const handleAutoTranslate = async (sourceText: string, targetKey: string) => {
+  const handleAutoTranslate = async (sourceText: string, targetKey: string, targetLang = 'en') => {
     if (!sourceText.trim()) return;
     setTranslatingField(targetKey);
     try {
-      const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=fa&tl=en&dt=t&q=${encodeURIComponent(sourceText)}`;
+      const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=fa&tl=${targetLang}&dt=t&q=${encodeURIComponent(sourceText)}`;
       const res = await fetch(url);
       const data = await res.json();
       const translatedText = data[0].map((item: any) => item[0]).join('');
       setFormData(prev => ({ ...prev, [targetKey]: translatedText }));
     } catch (error) {
-      showToast("خطا در ارتباط با سرویس ترجمه.", "error");
+      showToast("خطا در ارتباط با سرویس ترجمه هوشمند.", "error");
     } finally {
       setTranslatingField(null);
     }
   };
 
   const handleDelete = async (id: string) => {
-    const customConfirm = confirm("آیا از حذف این محصول اطمینان دارید؟");
+    const customConfirm = confirm("آیا از حذف این محصول رنگ اطمینان دارید؟");
     if (customConfirm) {
       const res = await deleteProduct(id);
       if (res.success) {
@@ -302,14 +323,9 @@ export default function ProductsManager() {
     }
   };
 
-  // ==========================================
-  // سیستم جدید ترتیب دستی (با دکمه تایید نهایی)
-  // ==========================================
-
+  // چیدمان و سورت دستی
   const handleStartReorder = () => {
-    // تهیه نسخه پشتیبان برای صورت انصراف کاربر
     setOriginalProductsBackup([...products]);
-    // پاکسازی فیلترها تا کل لیست به ترتیب فعلی نمایش داده شود
     setFilterMain("all");
     setFilterBrand("all");
     setFilterSub("all");
@@ -317,7 +333,7 @@ export default function ProductsManager() {
     setSortBy("custom");
     setSortOrder("asc");
     setIsReorderMode(true);
-    showToast("حالت ترتیب دستی فعال شد. محصولات را جابجا کرده و سپس دکمه «تایید چیدمان» را بزنید.", "success");
+    showToast("حالت ترتیب دستی فعال شد. کارت‌ها را جابجا کرده و «تایید چیدمان» را بزنید.", "success");
   };
 
   const handleCancelReorder = () => {
@@ -332,11 +348,10 @@ export default function ProductsManager() {
       const orderedIds = products.map(p => String(p._id));
       const res = await updateProductsOrder(orderedIds);
       if (res.success) {
-        // آپدیت فیلد order در استیت محلی
         const updatedLocal = products.map((p, idx) => ({ ...p, order: idx }));
         setProducts(updatedLocal);
         setIsReorderMode(false);
-        showToast("چیدمان جدید محصولات با موفقیت در دیتابیس ذخیره شد.", "success");
+        showToast("چیدمان جدید محصولات در دیتابیس ذخیره شد.", "success");
       } else {
         showToast(res.error || "خطا در ذخیره چیدمان.", "error");
       }
@@ -371,7 +386,6 @@ export default function ProductsManager() {
     setDraggedItemIndex(null);
   };
 
-  // --- هندلرهای فیلترهای مرحله‌ای (آبشاری) ---
   const handleMainCatChange = (val: string) => {
     setFilterMain(val);
     setFilterBrand("all");
@@ -383,18 +397,14 @@ export default function ProductsManager() {
     setFilterSub("all");
   };
 
-  // محاسبه برندهای مجاز بر اساس گروه اصلی انتخاب شده
   const availableBrands = brandsList.filter(b => {
     if (filterMain === "all") return true;
     return products.some(p => (p.brandId?._id === b._id || p.brandId === b._id) && p.mainCat === filterMain);
   });
 
-  // محاسبه زیردسته‌های مجاز بر اساس گروه اصلی و برند انتخاب شده
   const availableSubCats = categoriesList.filter(c => {
     if (c.iconName === 'main') return false;
-
     if (filterMain !== "all" && c.parent !== filterMain) return false;
-
     if (filterBrand !== "all") {
       const hasProduct = products.some(p => p.category === c.slug && (p.brandId?._id === filterBrand || p.brandId === filterBrand));
       if (!hasProduct) return false;
@@ -402,16 +412,16 @@ export default function ProductsManager() {
     return true;
   });
 
-  // اعمال تمام فیلترها
   let filteredProducts = products.filter(p => {
-    const mSearch = (p.faTitle && p.faTitle.includes(searchQuery)) || (p.enTitle && p.enTitle.toLowerCase().includes(searchQuery.toLowerCase()));
+    const mSearch = (p.faTitle && p.faTitle.includes(searchQuery)) || 
+                    (p.enTitle && p.enTitle.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                    (p.specs?.colorCode && p.specs.colorCode.toLowerCase().includes(searchQuery.toLowerCase()));
     const mMain = filterMain === "all" || p.mainCat === filterMain;
     const mBrand = filterBrand === "all" || p.brandId?._id === filterBrand || p.brandId === filterBrand;
     const mSub = filterSub === "all" || p.category === filterSub;
     return mSearch && mMain && mBrand && mSub;
   });
 
-  // اعمال سورت نهایی (در حالت ترتیب دستی، سورت غیرفعال است تا ایندکس واقعی آرایه حفظ شود)
   if (!isReorderMode) {
     filteredProducts.sort((a, b) => {
       let valA, valB;
@@ -422,10 +432,6 @@ export default function ProductsManager() {
       } else if (sortBy === "date") {
         valA = new Date(a.createdAt || 0).getTime();
         valB = new Date(b.createdAt || 0).getTime();
-        return sortOrder === "asc" ? valA - valB : valB - valA;
-      } else if (sortBy === "weight") {
-        valA = parseFloat((getSpecName(a.specs?.weight, a.specs?.weightFa) || "0").replace(/[^0-9.]/g, '')) || 0;
-        valB = parseFloat((getSpecName(b.specs?.weight, b.specs?.weightFa) || "0").replace(/[^0-9.]/g, '')) || 0;
         return sortOrder === "asc" ? valA - valB : valB - valA;
       } else if (sortBy === "custom") {
         valA = typeof a.order === "number" ? a.order : 0;
@@ -445,7 +451,20 @@ export default function ProductsManager() {
 
   const getCatName = (slug: string) => {
     const cat = categoriesList.find(c => c.slug === slug);
-    return cat ? cat.faName : "نامشخص";
+    return cat ? cat.faName : slug || "نامشخص";
+  };
+
+  const getMainCatLabel = (slug: string) => {
+    const mapping: Record<string, string> = {
+      oil: "رنگ روغنی / آلکیدی",
+      plastic: "رنگ پلاستیک و اکریلیک",
+      instant: "رنگ‌های فوری و نیتروسلولزی",
+      industrial: "رنگ‌های صنعتی و اپوکسی",
+      primers: "آستری، پرایمر و سیلر",
+      decorative: "رنگ‌های دکوراتیو و بافت‌دار",
+      tools: "تینر، حلال‌ها و ابزار"
+    };
+    return mapping[slug] || getCatName(slug);
   };
 
   const hasActiveFilters = filterMain !== "all" || filterBrand !== "all" || filterSub !== "all" || sortBy !== "custom" || searchQuery !== "";
@@ -453,29 +472,29 @@ export default function ProductsManager() {
   return (
     <div className="flex flex-col gap-6">
 
+      {/* هدر بخش مدیریت محصولات */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-2xl font-black text-gray-900 dark:text-white flex items-center gap-3">
-            لیست محصولات
+            کاتالوگ و لیست محصولات رنگ افغان فیضی
           </h1>
           <p className="text-xs text-gray-500 mt-2 font-medium flex items-center gap-2">
-            مدیریت، فیلتر مرحله‌ای، جستجو و تغییر چیدمان محصولات سایت
+            مدیریت مشخصات فنی مهندسی رنگ، زمان خشک شدن، کدهای رال، پوشش‌دهی و برگه اطلاعات فنی (TDS)
           </p>
         </div>
 
         <button
           onClick={handleAddNew}
           disabled={isReorderMode}
-          className="bg-amber-400 hover:bg-amber-500 disabled:opacity-50 text-gray-950 px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 transition-colors shadow-lg shadow-amber-400/20"
+          className="bg-amber-400 hover:bg-amber-500 disabled:opacity-50 text-gray-950 px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 transition-colors shadow-lg shadow-amber-400/20 cursor-pointer"
         >
           <Plus size={18} />
-          <span>افزودن محصول جدید</span>
+          <span>افزودن رنگ / محصول جدید</span>
         </button>
       </div>
 
-      {/* --- نوار حرفه‌ای فیلتر، سورت و جستجو --- */}
+      {/* نوار فیلتر و جستجو */}
       <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-3xl p-5 flex flex-col gap-4 shadow-sm">
-
         <div className="flex flex-wrap justify-between items-center gap-4">
           <div className="relative grow max-w-md">
             <Search size={18} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -484,7 +503,7 @@ export default function ProductsManager() {
               value={searchQuery}
               disabled={isReorderMode}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="جستجوی سریع محصول (نام، ویژگی)..."
+              placeholder="جستجوی رنگ (نام، کد رال RAL، پایه رزین)..."
               className="w-full bg-gray-50 dark:bg-gray-800/50 border border-gray-200 dark:border-gray-700 rounded-xl py-2.5 pr-12 pl-4 text-sm font-bold focus:outline-none focus:border-amber-400 transition-colors disabled:opacity-50"
             />
           </div>
@@ -494,7 +513,7 @@ export default function ProductsManager() {
               <button onClick={() => setViewMode("list")} className={`p-1.5 rounded-md transition-colors ${viewMode === 'list' ? 'bg-white dark:bg-gray-700 shadow-sm text-gray-900 dark:text-white' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`} title="نمایش لیست با عکس">
                 <ListIcon size={18} />
               </button>
-              <button onClick={() => setViewMode("compact")} className={`p-1.5 rounded-md transition-colors ${viewMode === 'compact' ? 'bg-white dark:bg-gray-700 shadow-sm text-gray-900 dark:text-white' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`} title="نمایش لیست ساده">
+              <button onClick={() => setViewMode("compact")} className={`p-1.5 rounded-md transition-colors ${viewMode === 'compact' ? 'bg-white dark:bg-gray-700 shadow-sm text-gray-900 dark:text-white' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`} title="نمایش لیست فشرده">
                 <AlignJustify size={18} />
               </button>
               <button onClick={() => setViewMode("grid")} className={`p-1.5 rounded-md transition-colors ${viewMode === 'grid' ? 'bg-white dark:bg-gray-700 shadow-sm text-gray-900 dark:text-white' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`} title="نمایش کارتی">
@@ -521,7 +540,6 @@ export default function ProductsManager() {
         </div>
 
         <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-gray-100 dark:border-gray-800">
-
           <div className={`flex flex-wrap sm:flex-nowrap items-center gap-2 bg-gray-50 dark:bg-gray-800/50 p-1.5 rounded-xl border border-gray-200 dark:border-gray-700 transition-opacity ${isReorderMode ? 'opacity-40 pointer-events-none' : ''}`}>
             <Filter size={16} className="text-amber-500 ml-1 shrink-0" />
             <select
@@ -529,10 +547,20 @@ export default function ProductsManager() {
               onChange={(e) => handleMainCatChange(e.target.value)}
               className="bg-transparent text-xs font-bold focus:outline-none text-gray-700 dark:text-gray-300 w-full sm:w-auto"
             >
-              <option value="all">۱. همه دسته‌های اصلی</option>
-              {mainCategories.map(c => (
+              <option value="all">۱. همه دسته‌های اصلی رنگ</option>
+              {mainCategories.length > 0 ? mainCategories.map(c => (
                 <option key={c.slug} value={c.slug}>{c.faName}</option>
-              ))}
+              )) : (
+                <>
+                  <option value="oil">رنگ‌های روغنی و آلکیدی</option>
+                  <option value="plastic">رنگ‌های پلاستیک و اکریلیک</option>
+                  <option value="instant">رنگ‌های فوری و سلولزی</option>
+                  <option value="industrial">پوشش‌های صنعتی و اپوکسی</option>
+                  <option value="primers">آستری‌ها و پرایمر</option>
+                  <option value="decorative">رنگ‌های دکوراتیو</option>
+                  <option value="tools">تینر و حلال‌ها</option>
+                </>
+              )}
             </select>
 
             <span className="text-gray-300 dark:text-gray-600 hidden sm:block">|</span>
@@ -564,10 +592,9 @@ export default function ProductsManager() {
               onChange={(e) => setSortBy(e.target.value)}
               className="bg-transparent text-xs font-bold focus:outline-none text-gray-700 dark:text-gray-300"
             >
-              <option value="custom">سورت: پیش‌فرض سایت</option>
-              <option value="name">سورت: نام محصول</option>
-              <option value="date">سورت: تاریخ آپلود</option>
-              <option value="weight">سورت: وزن / حجم</option>
+              <option value="custom">سورت: پیش‌فرض کاتالوگ</option>
+              <option value="name">سورت: نام رنگ</option>
+              <option value="date">سورت: جدیدترین</option>
             </select>
 
             {sortBy !== "custom" && (
@@ -584,12 +611,11 @@ export default function ProductsManager() {
             )}
           </div>
 
-          {/* دکمه ترتیب دستی و تایید چیدمان */}
           <div className="flex items-center gap-2 mr-auto mt-2 lg:mt-0">
             {hasActiveFilters && !isReorderMode && (
               <button
                 onClick={() => { setFilterMain("all"); setFilterBrand("all"); setFilterSub("all"); setSortBy("custom"); setSortOrder("asc"); setSearchQuery(""); }}
-                className="text-[11px] font-black text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 px-3 py-2 rounded-xl transition-colors flex items-center gap-1 border border-red-100 dark:border-red-900/50"
+                className="text-[11px] font-black text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 px-3 py-2 rounded-xl transition-colors flex items-center gap-1 border border-red-100 dark:border-red-900/50 cursor-pointer"
               >
                 <X size={14} /> ریست فیلتر
               </button>
@@ -627,12 +653,11 @@ export default function ProductsManager() {
               </div>
             )}
           </div>
-
         </div>
       </div>
 
+      {/* نمایش لیست محصولات */}
       <div className={`bg-white dark:bg-gray-900 border ${isReorderMode ? 'border-amber-400 dark:border-amber-500/60 ring-2 ring-amber-400/10' : 'border-gray-100 dark:border-gray-800'} rounded-3xl overflow-hidden shadow-sm transition-all duration-300 ${isSavingOrder ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
-
         {isLoading ? (
           <div className="flex justify-center items-center py-16 w-full">
             <Loader2 className="animate-spin text-amber-500" size={40} />
@@ -659,6 +684,7 @@ export default function ProductsManager() {
                     <Star size={12} className="fill-current" />
                   </div>
                 )}
+
                 <div className="w-full h-36 bg-gray-50 dark:bg-gray-800/50 rounded-xl flex items-center justify-center p-3 relative overflow-hidden group-hover:bg-amber-50 dark:group-hover:bg-amber-900/10 transition-colors">
                   {product.images?.main ? (
                     <img src={product.images.main} alt={product.faTitle} className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500" />
@@ -672,11 +698,11 @@ export default function ProductsManager() {
                 </div>
                 <div className="flex items-center justify-between mt-auto pt-3 border-t border-gray-100 dark:border-gray-800">
                   <span className="text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 px-2.5 py-1 rounded-lg" dir="ltr">
-                    {getSpecName(product.specs?.weight, product.specs?.weightFa)}
+                    {product.specs?.colorCode || product.specs?.resinBase?.fa || "رنگ صنعتی"}
                   </span>
                   <div className="flex items-center gap-1">
-                    <button onClick={() => handleEdit(product)} disabled={isReorderMode} className="p-1.5 bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-amber-500 rounded-lg transition-colors disabled:opacity-40"><Edit3 size={16} /></button>
-                    <button onClick={() => handleDelete(String(product._id))} disabled={isReorderMode} className="p-1.5 bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-red-500 rounded-lg transition-colors disabled:opacity-40"><Trash2 size={16} /></button>
+                    <button onClick={() => handleEdit(product)} disabled={isReorderMode} className="p-1.5 bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-amber-500 rounded-lg transition-colors disabled:opacity-40 cursor-pointer"><Edit3 size={16} /></button>
+                    <button onClick={() => handleDelete(String(product._id))} disabled={isReorderMode} className="p-1.5 bg-gray-100 dark:bg-gray-800 text-gray-500 hover:text-red-500 rounded-lg transition-colors disabled:opacity-40 cursor-pointer"><Trash2 size={16} /></button>
                   </div>
                 </div>
               </div>
@@ -692,10 +718,10 @@ export default function ProductsManager() {
                 <tr>
                   {isReorderMode && <th className="px-4 py-5 w-10 text-amber-500">جابجایی</th>}
                   {viewMode === "list" && <th className="px-6 py-5">تصویر</th>}
-                  <th className="px-6 py-5">عنوان (فارسی / انگلیسی)</th>
+                  <th className="px-6 py-5">عنوان رنگ (فارسی / انگلیسی)</th>
                   <th className="px-6 py-5">برند</th>
-                  <th className="px-6 py-5">وزن/حجم</th>
-                  <th className="px-6 py-5">دسته‌بندی‌ها</th>
+                  <th className="px-6 py-5">پایه رزین / حلال</th>
+                  <th className="px-6 py-5">گروه رنگ</th>
                   <th className="px-6 py-5">وضعیت</th>
                   <th className="px-6 py-5">عملیات</th>
                 </tr>
@@ -738,15 +764,15 @@ export default function ProductsManager() {
                       <div className="text-xs text-gray-500 font-mono mt-1">{product.enTitle || "---"}</div>
                     </td>
                     <td className="px-6 py-4 text-gray-600 dark:text-gray-300 font-medium">
-                      {product.brandId?.faName || "نامشخص"}
+                      {product.brandId?.faName || "افغان فیضی"}
                     </td>
-                    <td className="px-6 py-4 font-bold text-amber-600 dark:text-amber-500 text-xs" dir="ltr">
-                      {getSpecName(product.specs?.weight, product.specs?.weightFa)}
+                    <td className="px-6 py-4 font-bold text-amber-600 dark:text-amber-500 text-xs">
+                      {product.specs?.resinBase?.fa || product.specs?.thinnerType?.fa || "پایه آب / اکریلیک"}
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex flex-col gap-1.5">
                         <span className="bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400 px-2 py-1 rounded text-[10px] w-fit font-bold shadow-sm border border-blue-100 dark:border-blue-800/30">
-                          گروه: {getCatName(product.mainCat)}
+                          گروه: {getMainCatLabel(product.mainCat)}
                         </span>
                         <span className="bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300 px-2 py-1 rounded text-[10px] w-fit font-bold shadow-sm border border-gray-200 dark:border-gray-700">
                           دسته: {getCatName(product.category)}
@@ -756,7 +782,7 @@ export default function ProductsManager() {
 
                     <td className="px-6 py-4">
                       <span className="px-3 py-1.5 text-xs font-bold rounded-lg bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800/50 whitespace-nowrap shadow-sm">
-                        {getCatName(product.status) || (product.status === "published" ? "فعال" : "پیش‌نویس")}
+                        {product.status === "published" ? "فعال در کاتالوگ" : product.status === "draft" ? "پیش‌نویس" : "بایگانی شده"}
                       </span>
                     </td>
                     <td className="px-6 py-4">
@@ -764,7 +790,7 @@ export default function ProductsManager() {
                         <button
                           onClick={() => handleEdit(product)}
                           disabled={isReorderMode}
-                          className="p-2 bg-gray-50 dark:bg-gray-800 text-gray-400 hover:text-amber-500 hover:bg-amber-50 rounded-xl transition-colors disabled:opacity-40"
+                          className="p-2 bg-gray-50 dark:bg-gray-800 text-gray-400 hover:text-amber-500 hover:bg-amber-50 rounded-xl transition-colors disabled:opacity-40 cursor-pointer"
                           title="ویرایش"
                         >
                           <Edit3 size={16} />
@@ -772,7 +798,7 @@ export default function ProductsManager() {
                         <button
                           onClick={() => handleDelete(String(product._id))}
                           disabled={isReorderMode}
-                          className="p-2 bg-gray-50 dark:bg-gray-800 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors disabled:opacity-40"
+                          className="p-2 bg-gray-50 dark:bg-gray-800 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors disabled:opacity-40 cursor-pointer"
                           title="حذف"
                         >
                           <Trash2 size={16} />
@@ -800,7 +826,7 @@ export default function ProductsManager() {
               <button
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage(prev => prev - 1)}
-                className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-700 disabled:opacity-30 text-gray-600 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-800 transition-colors shadow-sm"
+                className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-700 disabled:opacity-30 text-gray-600 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-800 transition-colors shadow-sm cursor-pointer"
               >
                 <ChevronLeft size={16} />
               </button>
@@ -809,7 +835,7 @@ export default function ProductsManager() {
                 <button
                   key={page}
                   onClick={() => setCurrentPage(page)}
-                  className={`w-8 h-8 flex items-center justify-center rounded-lg text-xs font-black transition-all ${currentPage === page
+                  className={`w-8 h-8 flex items-center justify-center rounded-lg text-xs font-black transition-all cursor-pointer ${currentPage === page
                     ? 'bg-amber-400 text-gray-950 shadow-md shadow-amber-400/20'
                     : 'hover:bg-white dark:hover:bg-gray-800 text-gray-600 dark:text-gray-300 border border-transparent'
                     }`}
@@ -821,7 +847,7 @@ export default function ProductsManager() {
               <button
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage(prev => prev + 1)}
-                className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-700 disabled:opacity-30 text-gray-600 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-800 transition-colors shadow-sm"
+                className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 dark:border-gray-700 disabled:opacity-30 text-gray-600 dark:text-gray-300 hover:bg-white dark:hover:bg-gray-800 transition-colors shadow-sm cursor-pointer"
               >
                 <ChevronRight size={16} />
               </button>
@@ -830,6 +856,7 @@ export default function ProductsManager() {
         )}
       </div>
 
+      {/* مودال افزودن / ویرایش محصول تخصصی رنگ */}
       <AnimatePresence>
         {isModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
@@ -845,122 +872,182 @@ export default function ProductsManager() {
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative w-full max-w-4xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-3xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden"
+              className="relative w-full max-w-5xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-3xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden"
             >
               <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900">
                 <div className="flex items-center gap-4">
                   <h2 className="text-lg font-black text-gray-900 dark:text-white">
-                    {editMode ? `ویرایش: ${formData.faTitle}` : "ثبت محصول جدید"}
+                    {editMode ? `ویرایش رنگ: ${formData.faTitle}` : "ثبت محصول جدید در سبد تولید رنگ افغان فیضی"}
                   </h2>
                 </div>
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="p-2 text-gray-400 hover:text-red-500 bg-gray-100 dark:bg-gray-800 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-full transition-colors"
+                  className="p-2 text-gray-400 hover:text-red-500 bg-gray-100 dark:bg-gray-800 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-full transition-colors cursor-pointer"
                 >
                   <X size={20} />
                 </button>
               </div>
 
+              {/* تب‌های فرم */}
               <div className="flex border-b border-gray-100 dark:border-gray-800 px-6 pt-4 gap-6 bg-gray-50/50 dark:bg-gray-900 overflow-x-auto">
-                {["basic", "specs", "media"].map((tab) => (
-                  <button
-                    key={tab}
-                    type="button"
-                    onClick={() => setActiveTab(tab)}
-                    className={`pb-3 text-sm font-bold border-b-2 transition-colors whitespace-nowrap ${activeTab === tab
-                      ? "border-amber-400 text-amber-500"
-                      : "border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
-                      }`}
-                  >
-                    {tab === "basic" ? "اطلاعات پایه" : tab === "specs" ? "مشخصات تخصصی" : "رسانه و عکس"}
-                  </button>
-                ))}
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("basic")}
+                  className={`pb-3 text-sm font-bold border-b-2 transition-colors whitespace-nowrap flex items-center gap-2 cursor-pointer ${activeTab === "basic"
+                    ? "border-amber-400 text-amber-500"
+                    : "border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                    }`}
+                >
+                  <Layers size={16} />
+                  <span>اطلاعات پایه و شناسنامه</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("specs")}
+                  className={`pb-3 text-sm font-bold border-b-2 transition-colors whitespace-nowrap flex items-center gap-2 cursor-pointer ${activeTab === "specs"
+                    ? "border-amber-400 text-amber-500"
+                    : "border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                    }`}
+                >
+                  <Paintbrush size={16} />
+                  <span>مشخصات مهندسی و فنی رنگ</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("media")}
+                  className={`pb-3 text-sm font-bold border-b-2 transition-colors whitespace-nowrap flex items-center gap-2 cursor-pointer ${activeTab === "media"
+                    ? "border-amber-400 text-amber-500"
+                    : "border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                    }`}
+                >
+                  <FileText size={16} />
+                  <span>رسانه، کالیته و برگه فنی TDS</span>
+                </button>
               </div>
 
               <form onSubmit={handleFormSubmit} className="flex flex-col grow overflow-hidden bg-white dark:bg-gray-950">
                 <div className="p-6 overflow-y-auto grow custom-scrollbar">
 
+                  {/* تب ۱: اطلاعات پایه */}
                   {activeTab === "basic" && (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-in fade-in duration-300">
 
                       <div className="flex flex-col gap-2">
-                        <label className="text-xs font-black text-gray-400">نام محصول (فارسی) <span className="text-red-500">*</span></label>
+                        <label className="text-xs font-black text-gray-400">نام رنگ / محصول (فارسی دری) <span className="text-red-500">*</span></label>
                         <input
                           autoFocus
                           type="text"
                           value={formData.faTitle}
                           onChange={(e) => setFormData({ ...formData, faTitle: e.target.value })}
-                          placeholder="مثال: انرژی‌زا مکس"
+                          placeholder="مثال: رنگ روغنی براق آلکیدی سوپر"
                           className="border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 bg-transparent text-sm font-bold outline-none focus:border-amber-400"
                         />
                       </div>
 
                       <div className="flex flex-col gap-2">
-                        <label className="text-xs font-black text-gray-400">نام محصول (انگلیسی)</label>
+                        <label className="text-xs font-black text-gray-400">Product Name (انگلیسی)</label>
                         <div className="relative">
                           <input
                             type="text"
                             dir="ltr"
                             value={formData.enTitle}
                             onChange={(e) => setFormData({ ...formData, enTitle: e.target.value })}
-                            placeholder="Example: Max Energy"
+                            placeholder="Example: Super Gloss Alkyd Enamel"
                             className="w-full border border-gray-200 dark:border-gray-800 rounded-xl py-3 pr-4 pl-12 bg-transparent text-sm font-mono outline-none focus:border-amber-400"
                           />
                           <button
                             type="button"
-                            onClick={() => handleAutoTranslate(formData.faTitle, 'enTitle')}
+                            onClick={() => handleAutoTranslate(formData.faTitle, 'enTitle', 'en')}
                             disabled={translatingField === 'enTitle' || !formData.faTitle}
-                            className="absolute left-2 top-1/2 -translate-y-1/2 p-2 bg-amber-400/10 text-amber-600 hover:bg-amber-400 hover:text-gray-950 disabled:opacity-50 rounded-lg transition-colors"
+                            className="absolute left-2 top-1/2 -translate-y-1/2 p-2 bg-amber-400/10 text-amber-600 hover:bg-amber-400 hover:text-gray-950 disabled:opacity-50 rounded-lg transition-colors cursor-pointer"
+                            title="ترجمه خودکار به انگلیسی"
                           >
                             {translatingField === 'enTitle' ? <Loader2 size={16} className="animate-spin" /> : <Wand2 size={16} />}
                           </button>
                         </div>
                       </div>
 
-                      <div className="flex flex-col gap-2 md:col-span-2">
-                        <label className="text-xs font-black text-gray-400">اسلاگ URL (شناسه لینک) <span className="text-red-500">*</span></label>
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs font-black text-emerald-500">د رنګ نوم (پښتو - اختیاري)</label>
+                        <div className="relative">
+                          <input
+                            type="text"
+                            value={formData.psTitle}
+                            onChange={(e) => setFormData({ ...formData, psTitle: e.target.value })}
+                            placeholder="بېلګه: سوپر روښانه الکایډ غوړ رنګ"
+                            className="w-full border border-emerald-200 dark:border-emerald-900/50 rounded-xl py-3 pr-4 pl-12 bg-emerald-50/20 dark:bg-emerald-950/10 text-sm font-bold outline-none focus:border-emerald-400"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => handleAutoTranslate(formData.faTitle, 'psTitle', 'ps')}
+                            disabled={translatingField === 'psTitle' || !formData.faTitle}
+                            className="absolute left-2 top-1/2 -translate-y-1/2 p-2 bg-emerald-400/10 text-emerald-600 hover:bg-emerald-400 hover:text-gray-950 disabled:opacity-50 rounded-lg transition-colors cursor-pointer"
+                            title="ترجمه خودکار به پشتو"
+                          >
+                            {translatingField === 'psTitle' ? <Loader2 size={16} className="animate-spin" /> : <Wand2 size={16} />}
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs font-black text-gray-400">شناسه URL (اسلاگ) <span className="text-red-500">*</span></label>
                         <input
                           type="text"
                           dir="ltr"
                           value={formData.slug}
                           onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                          placeholder="max-energy-250"
+                          placeholder="super-gloss-alkyd-paint"
                           className="w-full border border-gray-200 dark:border-gray-800 rounded-xl py-3 px-4 bg-transparent text-sm font-mono outline-none focus:border-amber-400"
                         />
                       </div>
 
                       <div className="flex flex-col gap-2">
-                        <label className="text-xs font-black text-gray-400">گروه اصلی محصول <span className="text-red-500">*</span></label>
+                        <label className="text-xs font-black text-gray-400">گروه اصلی رنگ <span className="text-red-500">*</span></label>
                         <select
                           value={formData.mainCat}
-                          onChange={(e) => setFormData({ ...formData, mainCat: e.target.value, category: "", packaging: "", flavor: "", weight: "" })}
+                          onChange={(e) => setFormData({ ...formData, mainCat: e.target.value, category: "" })}
                           className="border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 bg-transparent text-sm font-bold outline-none focus:border-amber-400 text-gray-900 dark:text-white"
                         >
-                          <option value="" className="text-gray-500">انتخاب گروه اصلی...</option>
-                          {mainCategories.map(cat => (
-                            <option key={cat.slug} value={cat.slug}>{cat.faName}</option>
-                          ))}
+                          <option value="oil">رنگ‌های روغنی و آلکیدی</option>
+                          <option value="plastic">رنگ‌های پلاستیک و اکریلیک پایه آب</option>
+                          <option value="instant">رنگ‌های فوری، سیلر و کیلر نیتروسلولزی</option>
+                          <option value="industrial">پوشش‌های صنعتی، زینک‌ریچ و اپوکسی</option>
+                          <option value="primers">آستری‌ها، پرایمر و ضد زنگ</option>
+                          <option value="decorative">رنگ‌های دکوراتیو و بافت‌دار (تکسچر)</option>
+                          <option value="tools">تینرها، حلال‌ها و ابزار اجرا</option>
                         </select>
                       </div>
 
                       <div className="flex flex-col gap-2">
-                        <label className="text-xs font-black text-blue-500">زیردسته محصول (نوع) <span className="text-red-500">*</span></label>
+                        <label className="text-xs font-black text-blue-500">زیردسته تخصصی محصول <span className="text-red-500">*</span></label>
                         <select
                           value={formData.category}
-                          onChange={(e) => setFormData({ ...formData, category: e.target.value, packaging: "", flavor: "", weight: "" })}
-                          disabled={!formData.mainCat}
-                          className="border border-blue-200 dark:border-blue-900 rounded-xl px-4 py-3 bg-blue-50/30 dark:bg-blue-900/10 text-sm font-bold outline-none focus:border-blue-400 text-blue-700 dark:text-blue-400 disabled:opacity-50"
+                          onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                          className="border border-blue-200 dark:border-blue-900 rounded-xl px-4 py-3 bg-blue-50/30 dark:bg-blue-900/10 text-sm font-bold outline-none focus:border-blue-400 text-blue-700 dark:text-blue-400"
                         >
-                          <option value="">{formData.mainCat ? "انتخاب زیردسته..." : "ابتدا گروه اصلی را انتخاب کنید"}</option>
-                          {subCategories.map(cat => (
-                            <option key={cat.slug} value={cat.slug}>{cat.faName}</option>
-                          ))}
+                          <option value="">انتخاب زیردسته...</option>
+                          {subCategories.length > 0 ? (
+                            subCategories.map(cat => (
+                              <option key={cat.slug} value={cat.slug}>{cat.faName}</option>
+                            ))
+                          ) : (
+                            <>
+                              <option value="gloss">براق</option>
+                              <option value="matt">مات</option>
+                              <option value="semi-gloss">نیمه‌براق</option>
+                              <option value="anti-rust">ضد زنگ صنعتی</option>
+                              <option value="primer">پرایمر نفوذگر</option>
+                              <option value="polyurethane">پلی‌اورتان ۲ جزیی</option>
+                            </>
+                          )}
                         </select>
                       </div>
 
                       <div className="flex flex-col gap-2">
-                        <label className="text-xs font-black text-gray-400">انتخاب برند <span className="text-red-500">*</span></label>
+                        <label className="text-xs font-black text-gray-400">برند یا خط تولید <span className="text-red-500">*</span></label>
                         <select
                           value={formData.brandId}
                           onChange={(e) => setFormData({ ...formData, brandId: e.target.value })}
@@ -974,27 +1061,26 @@ export default function ProductsManager() {
                       </div>
 
                       <div className="flex flex-col gap-2">
-                        <label className="text-xs font-black text-gray-400">وضعیت نمایش در سایت</label>
+                        <label className="text-xs font-black text-gray-400">وضعیت نمایش در کاتالوگ</label>
                         <select
                           value={formData.visibilityStatus}
                           onChange={(e) => setFormData({ ...formData, visibilityStatus: e.target.value })}
                           className="border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 bg-transparent text-sm font-bold outline-none focus:border-amber-400 text-gray-900 dark:text-white"
                         >
-                          <option value="" className="text-gray-500">انتخاب وضعیت...</option>
-                          {statusOptions.map(cat => (
-                            <option key={cat.slug} value={cat.slug}>{cat.faName}</option>
-                          ))}
+                          <option value="published">منتشر شده (فعال در سایت)</option>
+                          <option value="draft">پیش‌نویس (مخفی)</option>
+                          <option value="archived">بایگانی شده</option>
                         </select>
                       </div>
 
                       <div className="flex flex-col gap-2 justify-center md:col-span-2 mt-4 border-t border-gray-100 dark:border-gray-800 pt-6">
-                        <div className="flex items-center gap-8">
+                        <div className="flex flex-wrap items-center gap-8">
                           <div className="flex items-center gap-3">
-                            <label className="text-xs font-black text-gray-600 dark:text-gray-300">محصول ویژه (نمایش در صفحه اصلی)</label>
+                            <label className="text-xs font-black text-gray-600 dark:text-gray-300">محصول ویژه (نمایش در صفحه اصلی کاتالوگ)</label>
                             <button
                               type="button"
                               onClick={() => setFormData({ ...formData, isFeatured: !formData.isFeatured })}
-                              className={`relative w-12 h-6 rounded-full transition-colors ${formData.isFeatured ? 'bg-amber-400' : 'bg-gray-200 dark:bg-gray-800'}`}
+                              className={`relative w-12 h-6 rounded-full transition-colors cursor-pointer ${formData.isFeatured ? 'bg-amber-400' : 'bg-gray-200 dark:bg-gray-800'}`}
                             >
                               <motion.div
                                 className="w-4 h-4 bg-white rounded-full shadow-sm absolute top-1"
@@ -1005,11 +1091,14 @@ export default function ProductsManager() {
                           </div>
 
                           <div className="flex items-center gap-3 border-r border-gray-200 dark:border-gray-700 pr-8">
-                            <label className="text-xs font-black text-red-600 dark:text-red-400">ثبت هشدار مصرف برای محصول</label>
+                            <label className="text-xs font-black text-red-600 dark:text-red-400 flex items-center gap-1.5">
+                              <ShieldAlert size={14} />
+                              <span>هشدار ایمنی و قابلیت اشتعال</span>
+                            </label>
                             <button
                               type="button"
                               onClick={() => setFormData({ ...formData, hasWarning: !formData.hasWarning })}
-                              className={`relative w-12 h-6 rounded-full transition-colors ${formData.hasWarning ? 'bg-red-500' : 'bg-gray-200 dark:bg-gray-800'}`}
+                              className={`relative w-12 h-6 rounded-full transition-colors cursor-pointer ${formData.hasWarning ? 'bg-red-500' : 'bg-gray-200 dark:bg-gray-800'}`}
                             >
                               <motion.div
                                 className="w-4 h-4 bg-white rounded-full shadow-sm absolute top-1"
@@ -1030,31 +1119,31 @@ export default function ProductsManager() {
                             className="grid grid-cols-1 md:grid-cols-2 gap-6 md:col-span-2 overflow-hidden bg-red-50/50 dark:bg-red-900/10 p-5 rounded-2xl border border-red-100 dark:border-red-900/50 mb-2 mt-2"
                           >
                             <div className="flex flex-col gap-2">
-                              <label className="text-xs font-black text-red-600 dark:text-red-400">متن هشدار (فارسی) <span className="text-red-500">*</span></label>
+                              <label className="text-xs font-black text-red-600 dark:text-red-400">متن هشدار ایمنی (فارسی)</label>
                               <textarea
                                 rows={2}
                                 value={formData.warningMessageFa}
                                 onChange={e => setFormData({ ...formData, warningMessageFa: e.target.value })}
-                                placeholder="مثال: مصرف این محصول برای زنان باردار توصیه نمی‌شود..."
+                                placeholder="مثال: مایع و بخار بسیار قابل اشتعال. در محیط دارای تهویه مناسب استفاده شود و دور از شعله مستقیم نگهداری شود."
                                 className="border border-red-200 dark:border-red-800/50 rounded-xl px-4 py-3 bg-white dark:bg-gray-950 text-sm font-bold outline-none focus:border-red-400 resize-none"
                               ></textarea>
                             </div>
                             <div className="flex flex-col gap-2">
-                              <label className="text-xs font-black text-red-600 dark:text-red-400">متن هشدار (انگلیسی)</label>
+                              <label className="text-xs font-black text-red-600 dark:text-red-400">Safety Warning (انگلیسی)</label>
                               <div className="relative">
                                 <textarea
                                   rows={2}
                                   dir="ltr"
                                   value={formData.warningMessageEn}
                                   onChange={e => setFormData({ ...formData, warningMessageEn: e.target.value })}
-                                  placeholder="Warning message..."
+                                  placeholder="Highly flammable liquid and vapor. Keep away from heat and open flames."
                                   className="w-full border border-red-200 dark:border-red-800/50 rounded-xl py-3 pr-4 pl-12 bg-white dark:bg-gray-950 text-sm font-mono outline-none focus:border-red-400 resize-none"
                                 ></textarea>
                                 <button
                                   type="button"
-                                  onClick={() => handleAutoTranslate(formData.warningMessageFa, 'warningMessageEn')}
+                                  onClick={() => handleAutoTranslate(formData.warningMessageFa, 'warningMessageEn', 'en')}
                                   disabled={translatingField === 'warningMessageEn' || !formData.warningMessageFa}
-                                  className="absolute left-2 top-3 p-2 bg-red-100 text-red-600 hover:bg-red-500 hover:text-white disabled:opacity-50 rounded-lg transition-colors"
+                                  className="absolute left-2 top-3 p-2 bg-red-100 text-red-600 hover:bg-red-500 hover:text-white disabled:opacity-50 rounded-lg transition-colors cursor-pointer"
                                 >
                                   {translatingField === 'warningMessageEn' ? <Loader2 size={16} className="animate-spin" /> : <Wand2 size={16} />}
                                 </button>
@@ -1065,31 +1154,32 @@ export default function ProductsManager() {
                       </AnimatePresence>
 
                       <div className="flex flex-col gap-2 md:col-span-2 mt-4 border-t border-gray-100 dark:border-gray-800 pt-6">
-                        <label className="text-xs font-black text-gray-400">توضیحات کوتاه (فارسی)</label>
+                        <label className="text-xs font-black text-gray-400">معرفی و توضیحات کلی رنگ (فارسی)</label>
                         <textarea
                           rows={2}
                           value={formData.faDesc}
                           onChange={e => setFormData({ ...formData, faDesc: e.target.value })}
-                          placeholder="توضیح مختصر محصول..."
+                          placeholder="توضیح کاربردها، سطوح هدف (گچ، سیمان، فلز، چوب) و ویژگی‌های کلیدی..."
                           className="border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 bg-gray-50/50 dark:bg-gray-900/30 text-sm font-medium outline-none focus:border-amber-400 resize-none"
                         ></textarea>
                       </div>
+
                       <div className="flex flex-col gap-2 md:col-span-2">
-                        <label className="text-xs font-black text-gray-400">توضیحات کوتاه (انگلیسی)</label>
+                        <label className="text-xs font-black text-gray-400">Product Overview (انگلیسی)</label>
                         <div className="relative">
                           <textarea
                             rows={2}
                             dir="ltr"
                             value={formData.enDesc}
                             onChange={e => setFormData({ ...formData, enDesc: e.target.value })}
-                            placeholder="Short description..."
+                            placeholder="Premium grade paint designed for high durability and excellent opacity on interior and exterior surfaces..."
                             className="w-full border border-gray-200 dark:border-gray-800 rounded-xl py-3 pr-4 pl-12 bg-gray-50/50 dark:bg-gray-900/30 text-sm font-mono outline-none focus:border-amber-400 resize-none"
                           ></textarea>
                           <button
                             type="button"
-                            onClick={() => handleAutoTranslate(formData.faDesc, 'enDesc')}
+                            onClick={() => handleAutoTranslate(formData.faDesc, 'enDesc', 'en')}
                             disabled={translatingField === 'enDesc' || !formData.faDesc}
-                            className="absolute left-2 top-3 p-2 bg-amber-400/10 text-amber-600 hover:bg-amber-400 hover:text-gray-950 disabled:opacity-50 rounded-lg transition-colors"
+                            className="absolute left-2 top-3 p-2 bg-amber-400/10 text-amber-600 hover:bg-amber-400 hover:text-gray-950 disabled:opacity-50 rounded-lg transition-colors cursor-pointer"
                           >
                             {translatingField === 'enDesc' ? <Loader2 size={16} className="animate-spin" /> : <Wand2 size={16} />}
                           </button>
@@ -1098,135 +1188,204 @@ export default function ProductsManager() {
                     </div>
                   )}
 
+                  {/* تب ۲: مشخصات تخصصی و مهندسی رنگ */}
                   {activeTab === "specs" && (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in duration-300">
 
+                      {/* پایه رزین */}
                       <div className="flex flex-col gap-2">
-                        <label className="text-xs font-black text-gray-400">نوع بسته‌بندی</label>
-                        <select
-                          value={formData.packaging}
-                          onChange={(e) => setFormData({ ...formData, packaging: e.target.value })}
-                          className="border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 bg-transparent text-sm font-bold outline-none focus:border-amber-400 text-gray-900 dark:text-white"
-                        >
-                          <option value="" className="text-gray-500">{formData.category ? "انتخاب بسته‌بندی..." : "ابتدا زیردسته را انتخاب کنید"}</option>
-                          {packagingOptions.map(cat => <option key={cat.slug} value={cat.slug}>{cat.faName}</option>)}
-                        </select>
-                      </div>
-
-                      <div className="flex flex-col gap-2">
-                        <label className="text-xs font-black text-gray-400">طعم و عصاره</label>
-                        <select
-                          value={formData.flavor}
-                          onChange={(e) => setFormData({ ...formData, flavor: e.target.value })}
-                          className="border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 bg-transparent text-sm font-bold outline-none focus:border-amber-400 text-gray-900 dark:text-white"
-                        >
-                          <option value="" className="text-gray-500">بدون طعم / انتخاب کنید...</option>
-                          {flavorOptions.map(cat => <option key={cat.slug} value={cat.slug}>{cat.faName}</option>)}
-                        </select>
-                      </div>
-
-                      <div className="flex flex-col gap-2">
-                        <label className="text-xs font-black text-gray-400">حجم / وزن</label>
-                        <select
-                          value={formData.weight}
-                          onChange={(e) => setFormData({ ...formData, weight: e.target.value })}
-                          className="border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 bg-transparent text-sm font-bold outline-none focus:border-amber-400 text-gray-900 dark:text-white"
-                        >
-                          <option value="" className="text-gray-500">انتخاب کنید...</option>
-                          {weightOptions.map(cat => <option key={cat.slug} value={cat.slug}>{cat.faName}</option>)}
-                        </select>
-                      </div>
-
-                      <div className="flex flex-col gap-2">
-                        <label className="text-xs font-black text-gray-400">تعداد در بسته (کارتن/شیرینگ)</label>
+                        <label className="text-xs font-black text-gray-400 flex items-center gap-1.5">
+                          <Layers size={14} className="text-amber-500" />
+                          <span>پایه رزین (فارسی)</span>
+                        </label>
                         <input
                           type="text"
-                          value={formData.itemsPerPackage}
-                          onChange={e => setFormData({ ...formData, itemsPerPackage: e.target.value })}
-                          placeholder="مثال: ۲۴ عدد"
+                          value={formData.resinBaseFa}
+                          onChange={e => setFormData({ ...formData, resinBaseFa: e.target.value })}
+                          placeholder="مثال: رزین آلکیدی پایه بلند، اکریلیک خالص"
                           className="border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 bg-transparent text-sm font-bold outline-none focus:border-amber-400"
                         />
                       </div>
 
                       <div className="flex flex-col gap-2">
-                        <label className="text-xs font-black text-gray-400">مدت انقضا (فارسی)</label>
-                        <input
-                          type="text"
-                          value={formData.faShelfLife}
-                          onChange={e => setFormData({ ...formData, faShelfLife: e.target.value })}
-                          placeholder="مثال: ۶ ماه"
-                          className="border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 bg-transparent text-sm font-bold outline-none focus:border-amber-400"
-                        />
-                      </div>
-
-                      <div className="flex flex-col gap-2">
-                        <label className="text-xs font-black text-gray-400">Shelf Life (انگلیسی)</label>
+                        <label className="text-xs font-black text-gray-400">Resin Base (انگلیسی)</label>
                         <div className="relative">
                           <input
                             type="text"
                             dir="ltr"
-                            value={formData.enShelfLife}
-                            onChange={e => setFormData({ ...formData, enShelfLife: e.target.value })}
-                            placeholder="Example: 6 Months"
+                            value={formData.resinBaseEn}
+                            onChange={e => setFormData({ ...formData, resinBaseEn: e.target.value })}
+                            placeholder="Long Oil Alkyd Resin / Pure Acrylic"
                             className="w-full border border-gray-200 dark:border-gray-800 rounded-xl py-3 pr-4 pl-12 bg-transparent text-sm font-mono outline-none focus:border-amber-400"
                           />
                           <button
                             type="button"
-                            onClick={() => handleAutoTranslate(formData.faShelfLife, 'enShelfLife')}
-                            disabled={translatingField === 'enShelfLife' || !formData.faShelfLife}
-                            className="absolute left-2 top-1/2 -translate-y-1/2 p-1.5 bg-amber-400/10 text-amber-600 hover:bg-amber-400 hover:text-gray-950 disabled:opacity-50 rounded-lg transition-colors"
+                            onClick={() => handleAutoTranslate(formData.resinBaseFa, 'resinBaseEn', 'en')}
+                            disabled={translatingField === 'resinBaseEn' || !formData.resinBaseFa}
+                            className="absolute left-2 top-1/2 -translate-y-1/2 p-1.5 bg-amber-400/10 text-amber-600 hover:bg-amber-400 hover:text-gray-950 disabled:opacity-50 rounded-lg transition-colors cursor-pointer"
                           >
-                            {translatingField === 'enShelfLife' ? <Loader2 size={14} className="animate-spin" /> : <Wand2 size={14} />}
+                            {translatingField === 'resinBaseEn' ? <Loader2 size={14} className="animate-spin" /> : <Wand2 size={14} />}
                           </button>
                         </div>
                       </div>
 
-                      <div className="flex flex-col gap-2 md:col-span-2 lg:col-span-3">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4 border-t border-gray-100 dark:border-gray-800 pt-6">
-                          <div className="flex flex-col gap-2">
-                            <label className="text-xs font-black text-gray-400">ترکیبات اصلی (فارسی)</label>
-                            <textarea
-                              rows={2}
-                              value={formData.faIngredients}
-                              onChange={e => setFormData({ ...formData, faIngredients: e.target.value })}
-                              placeholder="آب، شکر..."
-                              className="border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 bg-gray-50/50 dark:bg-gray-900/30 text-sm font-medium outline-none focus:border-amber-400 resize-none"
-                            ></textarea>
-                          </div>
-                          <div className="flex flex-col gap-2">
-                            <label className="text-xs font-black text-gray-400">Ingredients (انگلیسی)</label>
-                            <div className="relative">
-                              <textarea
-                                rows={2}
-                                dir="ltr"
-                                value={formData.enIngredients}
-                                onChange={e => setFormData({ ...formData, enIngredients: e.target.value })}
-                                placeholder="Water, Sugar..."
-                                className="w-full border border-gray-200 dark:border-gray-800 rounded-xl py-3 pr-4 pl-12 bg-gray-50/50 dark:bg-gray-900/30 text-sm font-mono outline-none focus:border-amber-400 resize-none"
-                              ></textarea>
-                              <button
-                                type="button"
-                                onClick={() => handleAutoTranslate(formData.faIngredients, 'enIngredients')}
-                                disabled={translatingField === 'enIngredients' || !formData.faIngredients}
-                                className="absolute left-2 top-3 p-2 bg-amber-400/10 text-amber-600 hover:bg-amber-400 hover:text-gray-950 disabled:opacity-50 rounded-lg transition-colors"
-                              >
-                                {translatingField === 'enIngredients' ? <Loader2 size={16} className="animate-spin" /> : <Wand2 size={16} />}
-                              </button>
-                            </div>
-                          </div>
-                        </div>
+                      {/* نوع حلال و تینر */}
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs font-black text-gray-400 flex items-center gap-1.5">
+                          <Droplets size={14} className="text-blue-500" />
+                          <span>نوع حلال / تینر (فارسی)</span>
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.thinnerTypeFa}
+                          onChange={e => setFormData({ ...formData, thinnerTypeFa: e.target.value })}
+                          placeholder="مثال: تینر روغنی مخصوص / تینر فوری ۱۰۰۰۰ / آب"
+                          className="border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 bg-transparent text-sm font-bold outline-none focus:border-amber-400"
+                        />
                       </div>
+
+                      {/* پوشش‌دهی */}
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs font-black text-gray-400">میزان پوشش‌دهی (m²/Liter)</label>
+                        <input
+                          type="text"
+                          value={formData.coverageFa}
+                          onChange={e => setFormData({ ...formData, coverageFa: e.target.value })}
+                          placeholder="مثال: ۱۰ الی ۱۲ متر مربع بر لیتر"
+                          className="border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 bg-transparent text-sm font-bold outline-none focus:border-amber-400"
+                        />
+                      </div>
+
+                      {/* زمان خشک شدن سطحی */}
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs font-black text-gray-400 flex items-center gap-1.5">
+                          <Clock size={14} className="text-amber-500" />
+                          <span>زمان خشک شدن سطحی (لمسی)</span>
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.surfaceDryFa}
+                          onChange={e => setFormData({ ...formData, surfaceDryFa: e.target.value })}
+                          placeholder="مثال: ۱۵ الی ۳۰ دقیقه در دمای ۲۵°C"
+                          className="border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 bg-transparent text-sm font-bold outline-none focus:border-amber-400"
+                        />
+                      </div>
+
+                      {/* زمان خشک شدن نهایی */}
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs font-black text-gray-400 flex items-center gap-1.5">
+                          <Clock size={14} className="text-emerald-500" />
+                          <span>زمان خشک شدن نهایی (عمقی)</span>
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.fullDryFa}
+                          onChange={e => setFormData({ ...formData, fullDryFa: e.target.value })}
+                          placeholder="مثال: ۲۴ ساعت کامل"
+                          className="border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 bg-transparent text-sm font-bold outline-none focus:border-amber-400"
+                        />
+                      </div>
+
+                      {/* کد رنگ / شید رال */}
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs font-black text-gray-400">کد استاندارد رنگ / رال (RAL Code)</label>
+                        <input
+                          type="text"
+                          dir="ltr"
+                          value={formData.colorCode}
+                          onChange={e => setFormData({ ...formData, colorCode: e.target.value })}
+                          placeholder="RAL 9010 / سفید براق"
+                          className="border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 bg-transparent text-sm font-mono outline-none focus:border-amber-400"
+                        />
+                      </div>
+
+                      {/* استانداردهای ملی و بین‌المللی */}
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs font-black text-gray-400 flex items-center gap-1.5">
+                          <Award size={14} className="text-amber-500" />
+                          <span>استانداردها (با کاما جدا کنید)</span>
+                        </label>
+                        <input
+                          type="text"
+                          dir="ltr"
+                          value={formData.standardCodes}
+                          onChange={e => setFormData({ ...formData, standardCodes: e.target.value })}
+                          placeholder="ISO 12944, ASTM D3359, ANSA AF"
+                          className="border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 bg-transparent text-sm font-mono outline-none focus:border-amber-400"
+                        />
+                      </div>
+
+                      {/* درجه براقیت */}
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs font-black text-gray-400">درجه براقیت (Gloss Level)</label>
+                        <select
+                          value={formData.glossLevelFa}
+                          onChange={e => setFormData({ ...formData, glossLevelFa: e.target.value })}
+                          className="border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 bg-transparent text-sm font-bold outline-none focus:border-amber-400 text-gray-900 dark:text-white"
+                        >
+                          <option value="">انتخاب درجه براقیت...</option>
+                          <option value="سوپر براق (>85 GU)">سوپر براق (Super Gloss)</option>
+                          <option value="براق (60-80 GU)">براق (Gloss)</option>
+                          <option value="نیمه‌براق (30-50 GU)">نیمه‌براق (Semi-Gloss)</option>
+                          <option value="مات (10-25 GU)">مات (Matt / Eggshell)</option>
+                          <option value="فوق‌العاده مات (<5 GU)">فوق‌العاده مات (Dead Matt)</option>
+                        </select>
+                      </div>
+
+                      {/* روش اجرا */}
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs font-black text-gray-400">روش اجرا (Application Method)</label>
+                        <input
+                          type="text"
+                          value={formData.applicationMethodFa}
+                          onChange={e => setFormData({ ...formData, applicationMethodFa: e.target.value })}
+                          placeholder="قلم‌مو، غلطک پشمی، پیستوله کاسه‌رو، ایرلس صنعتی"
+                          className="border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 bg-transparent text-sm font-bold outline-none focus:border-amber-400"
+                        />
+                      </div>
+
+                      {/* اندازه‌های بسته‌بندی */}
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs font-black text-gray-400">اندازه‌های بسته‌بندی موجود</label>
+                        <input
+                          type="text"
+                          value={formData.packagingSizes}
+                          onChange={e => setFormData({ ...formData, packagingSizes: e.target.value })}
+                          placeholder="۱ لیتری، ۴ لیتری (گالن)، ۲۰ لیتری (حلب)"
+                          className="border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 bg-transparent text-sm font-bold outline-none focus:border-amber-400"
+                        />
+                      </div>
+
+                      {/* دانسیته و ویسکوزیته */}
+                      <div className="flex flex-col gap-2">
+                        <label className="text-xs font-black text-gray-400">وزن مخصوص / دانسیته (Density)</label>
+                        <input
+                          type="text"
+                          dir="ltr"
+                          value={formData.density}
+                          onChange={e => setFormData({ ...formData, density: e.target.value })}
+                          placeholder="1.25 ± 0.05 g/cm³"
+                          className="border border-gray-200 dark:border-gray-800 rounded-xl px-4 py-3 bg-transparent text-sm font-mono outline-none focus:border-amber-400"
+                        />
+                      </div>
+
                     </div>
                   )}
 
+                  {/* تب ۳: رسانه، کالیته و برگه اطلاعات فنی TDS */}
                   {activeTab === "media" && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 animate-in fade-in duration-300">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-in fade-in duration-300">
+                      
+                      {/* تصویر اصلی محصول */}
                       <div className="flex flex-col gap-4">
-                        <label className="text-sm font-black text-gray-900 dark:text-white">تصویر اصلی محصول (بدون پس‌زمینه)</label>
+                        <label className="text-sm font-black text-gray-900 dark:text-white flex items-center gap-1.5">
+                          <ImageIcon size={16} className="text-amber-500" />
+                          <span>تصویر اصلی قوطی / سطل رنگ</span>
+                        </label>
                         {formData.mainImage && (
-                          <img src={formData.mainImage} className="w-full h-48 object-contain rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 p-2" alt="Main" />
+                          <img src={formData.mainImage} className="w-full h-44 object-contain rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 p-2" alt="Main" />
                         )}
-                        <label className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-2xl h-48 flex flex-col items-center justify-center gap-3 bg-gray-50/50 hover:bg-gray-100 dark:bg-gray-900/30 dark:hover:bg-gray-800 transition-colors cursor-pointer group">
+                        <label className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-2xl h-44 flex flex-col items-center justify-center gap-3 bg-gray-50/50 hover:bg-gray-100 dark:bg-gray-900/30 dark:hover:bg-gray-800 transition-colors cursor-pointer group">
                           <input
                             type="file"
                             accept="image/*"
@@ -1234,28 +1393,34 @@ export default function ProductsManager() {
                             onChange={async (e) => {
                               const f = e.target.files?.[0];
                               if (!f) return;
-                              if (formData.mainImage) await fetch('/api/upload', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fileUrl: formData.mainImage }) }).catch(err => console.error(err));
+                              if (formData.mainImage && !formData.mainImage.startsWith('http')) {
+                                await fetch('/api/upload', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fileUrl: formData.mainImage }) }).catch(err => console.error(err));
+                              }
                               const fd = new FormData(); fd.append('file', f);
                               const r = await fetch('/api/upload', { method: 'POST', body: fd }); const d = await r.json();
                               if (d.success) {
                                 setFormData({ ...formData, mainImage: d.url });
-                                showToast("تصویر اصلی محصول آپلود شد.", "success");
+                                showToast("تصویر اصلی رنگ با موفقیت آپلود شد.", "success");
                               }
                             }}
                           />
-                          <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
-                            <Upload size={20} className="text-gray-400 group-hover:text-amber-500" />
+                          <div className="w-10 h-10 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                            <Upload size={18} className="text-gray-400 group-hover:text-amber-500" />
                           </div>
-                          <span className="text-xs font-bold text-gray-500">آپلود عکس با فرمت PNG ترنسپرنت</span>
+                          <span className="text-xs font-bold text-gray-500">آپلود عکس قوطی با پس‌زمینه شفاف</span>
                         </label>
                       </div>
 
+                      {/* کالیته یا بافت رنگ */}
                       <div className="flex flex-col gap-4">
-                        <label className="text-sm font-black text-gray-900 dark:text-white">جدول ارزش غذایی (Nutrition Facts)</label>
-                        {formData.nutritionImage && (
-                          <img src={formData.nutritionImage} className="w-full h-48 object-contain rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 p-2" alt="Nutrition" />
+                        <label className="text-sm font-black text-gray-900 dark:text-white flex items-center gap-1.5">
+                          <Paintbrush size={16} className="text-blue-500" />
+                          <span>کالیته رنگ یا تصویر بافت اجرا</span>
+                        </label>
+                        {formData.colorSwatchImage && (
+                          <img src={formData.colorSwatchImage} className="w-full h-44 object-cover rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 p-1" alt="Swatch" />
                         )}
-                        <label className="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-2xl h-48 flex flex-col items-center justify-center gap-3 bg-blue-50/30 hover:bg-blue-100/50 dark:bg-blue-900/10 dark:hover:bg-blue-900/30 transition-colors cursor-pointer group">
+                        <label className="border-2 border-dashed border-blue-200 dark:border-blue-900/50 rounded-2xl h-44 flex flex-col items-center justify-center gap-3 bg-blue-50/20 hover:bg-blue-50/50 dark:bg-blue-900/10 transition-colors cursor-pointer group">
                           <input
                             type="file"
                             accept="image/*"
@@ -1263,21 +1428,61 @@ export default function ProductsManager() {
                             onChange={async (e) => {
                               const f = e.target.files?.[0];
                               if (!f) return;
-                              if (formData.nutritionImage) await fetch('/api/upload', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fileUrl: formData.nutritionImage }) }).catch(err => console.error(err));
                               const fd = new FormData(); fd.append('file', f);
                               const r = await fetch('/api/upload', { method: 'POST', body: fd }); const d = await r.json();
                               if (d.success) {
-                                setFormData({ ...formData, nutritionImage: d.url });
-                                showToast("جدول ارزش غذایی آپلود شد.", "success");
+                                setFormData({ ...formData, colorSwatchImage: d.url });
+                                showToast("کالیته / بافت رنگ آپلود شد.", "success");
                               }
                             }}
                           />
-                          <div className="w-12 h-12 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
-                            <Upload size={20} className="text-blue-400 group-hover:text-blue-500" />
+                          <div className="w-10 h-10 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                            <Upload size={18} className="text-blue-400 group-hover:text-blue-500" />
                           </div>
-                          <span className="text-xs font-bold text-blue-500/70 dark:text-blue-400">آپلود جدول استاندارد ارزش غذایی</span>
+                          <span className="text-xs font-bold text-blue-500/80">آپلود شید رنگ یا بافت سمپل</span>
                         </label>
                       </div>
+
+                      {/* برگه مشخصات فنی مهندسی TDS */}
+                      <div className="flex flex-col gap-4">
+                        <label className="text-sm font-black text-gray-900 dark:text-white flex items-center gap-1.5">
+                          <FileText size={16} className="text-emerald-500" />
+                          <span>برگه اطلاعات فنی (TDS) یا PDF</span>
+                        </label>
+                        {formData.datasheetPdf && (
+                          <div className="w-full h-44 rounded-xl border border-emerald-200 dark:border-emerald-800 bg-emerald-50/30 dark:bg-emerald-950/20 p-4 flex flex-col items-center justify-center text-center gap-2">
+                            <FileText size={32} className="text-emerald-600 dark:text-emerald-400" />
+                            <span className="text-xs font-bold text-emerald-700 dark:text-emerald-300 font-mono truncate max-w-full">
+                              {formData.datasheetPdf.split('/').pop()}
+                            </span>
+                            <a href={formData.datasheetPdf} target="_blank" rel="noopener noreferrer" className="text-[11px] font-bold text-blue-600 underline">
+                              مشاهده و دانلود فایل
+                            </a>
+                          </div>
+                        )}
+                        <label className="border-2 border-dashed border-emerald-200 dark:border-emerald-900/50 rounded-2xl h-44 flex flex-col items-center justify-center gap-3 bg-emerald-50/20 hover:bg-emerald-50/50 dark:bg-emerald-950/10 transition-colors cursor-pointer group">
+                          <input
+                            type="file"
+                            accept=".pdf,.doc,.docx"
+                            className="hidden"
+                            onChange={async (e) => {
+                              const f = e.target.files?.[0];
+                              if (!f) return;
+                              const fd = new FormData(); fd.append('file', f);
+                              const r = await fetch('/api/upload', { method: 'POST', body: fd }); const d = await r.json();
+                              if (d.success) {
+                                setFormData({ ...formData, datasheetPdf: d.url });
+                                showToast("فایل برگه مشخصات فنی TDS آپلود شد.", "success");
+                              }
+                            }}
+                          />
+                          <div className="w-10 h-10 bg-white dark:bg-gray-800 rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                            <Upload size={18} className="text-emerald-500 group-hover:text-emerald-600" />
+                          </div>
+                          <span className="text-xs font-bold text-emerald-600/80">آپلود برگه فنی TDS رسمی (PDF)</span>
+                        </label>
+                      </div>
+
                     </div>
                   )}
 
@@ -1287,15 +1492,15 @@ export default function ProductsManager() {
                   <button
                     type="button"
                     onClick={() => setIsModalOpen(false)}
-                    className="px-5 py-2.5 rounded-xl font-bold text-gray-500 hover:bg-white dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white transition-colors text-sm border border-transparent hover:border-gray-200 dark:hover:border-gray-700 shadow-sm"
+                    className="px-5 py-2.5 rounded-xl font-bold text-gray-500 hover:bg-white dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white transition-colors text-sm border border-transparent hover:border-gray-200 dark:hover:border-gray-700 shadow-sm cursor-pointer"
                   >
                     انصراف (Esc)
                   </button>
                   <button
                     type="submit"
-                    className="bg-amber-400 hover:bg-amber-500 text-gray-950 px-8 py-2.5 rounded-xl font-black flex items-center gap-2 transition-all shadow-lg shadow-amber-400/20 hover:scale-105 active:scale-95 text-sm"
+                    className="bg-amber-400 hover:bg-amber-500 text-gray-950 px-8 py-2.5 rounded-xl font-black flex items-center gap-2 transition-all shadow-lg shadow-amber-400/20 hover:scale-105 active:scale-95 text-sm cursor-pointer"
                   >
-                    <CheckCircle2 size={18} /> {editMode ? "بروزرسانی اطلاعات" : "ذخیره محصول جدید"}
+                    <CheckCircle2 size={18} /> {editMode ? "بروزرسانی مشخصات فنی رنگ" : "ذخیره رنگ جدید در سامانه"}
                   </button>
                 </div>
 

@@ -4,12 +4,12 @@ import { jwtVerify } from 'jose';
 
 // ۱. ساخت هسته اصلی تغییر زبان
 const intlMiddleware = createMiddleware({
-  locales: ['fa', 'en'],
+  locales: ['fa', 'en', 'ps'],
   defaultLocale: 'fa',
   localePrefix: 'always'
 });
 
-const JWT_SECRET_KEY = process.env.JWT_SECRET || "Gandum_Island_Super_Secure_Key_2026_!@#";
+const JWT_SECRET_KEY = process.env.JWT_SECRET || "Afghan_Faizi_Paint_Super_Secure_Key_2026_!@#";
 const encodedKey = new TextEncoder().encode(JWT_SECRET_KEY);
 
 export default async function middleware(request: NextRequest) {
@@ -54,5 +54,5 @@ export default async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/', '/(fa|en)/:path*']
+  matcher: ['/', '/(fa|en|ps)/:path*']
 };

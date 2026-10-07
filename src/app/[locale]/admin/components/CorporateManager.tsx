@@ -607,7 +607,7 @@ export default function CorporateManager({ currentSection }: CorporateManagerPro
               <div className="border border-gray-200 dark:border-gray-800 rounded-3xl p-6 bg-gray-50/50 dark:bg-gray-800/30">
                 <div className="flex justify-between items-center mb-6">
                   <h3 className="font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                    <Award className="text-amber-500" size={20} /> کارت‌های «چرا جزیره گندم؟»
+                    <Award className="text-amber-500" size={20} /> کارت‌های «چرا رنگ افغان فیضی؟»
                   </h3>
                   <button onClick={() => openModal("why")} className="bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-4 py-2 rounded-xl text-sm font-bold flex items-center gap-2 hover:bg-amber-400 hover:text-gray-900 transition-colors">
                     <Plus size={16} /> افزودن دلیل

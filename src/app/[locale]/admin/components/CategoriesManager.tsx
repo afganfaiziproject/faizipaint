@@ -11,14 +11,13 @@ import { getCategories, createCategory, updateCategory, deleteCategory } from "@
 import { getBrands } from "@/actions/brand";
 
 const groupMetadata = [
-  { id: "main", title: "گروه‌های اصلی محصولات", icon: Layers },
-  { id: "brands", title: "برندهای زیرمجموعه", icon: Tag },
-  { id: "beverage_type", title: "انواع نوشیدنی", icon: Droplets },
-  { id: "snack_type", title: "انواع تنقلات", icon: Sparkles },
-  { id: "packaging", title: "انواع بسته‌بندی", icon: Package },
-  { id: "flavor", title: "طعم و عصاره", icon: FlaskConical },
-  { id: "weight", title: "احجام و اوزان", icon: Scale },
-  { id: "status", title: "لیبل‌های وضعیت", icon: CheckCircle2 },
+  { id: "main", title: "گروه‌های اصلی رنگ (روغنی، پلاستیک، فوری، صنعتی)", icon: Layers },
+  { id: "brands", title: "خطوط تولید و برندها", icon: Tag },
+  { id: "resin_base", title: "پایه‌های رزین (اکریلیک، آلکیدی، اپوکسی و...)", icon: FlaskConical },
+  { id: "thinner_type", title: "انواع حلال و تینر", icon: Droplets },
+  { id: "packaging", title: "انواع بسته‌بندی و احجام", icon: Package },
+  { id: "gloss_level", title: "درجات براقیت (مات، براق و...)", icon: Sparkles },
+  { id: "status", title: "لیبل‌های وضعیت تولید و تأمین", icon: CheckCircle2 },
   { id: "media", title: "دسته‌بندی‌های رسانه و گالری", icon: Film }
 ];
 
@@ -42,7 +41,7 @@ export default function CategoriesManager({ activeCategoryId }: { activeCategory
   const isBrandsCategory = activeCategoryId === "brands";
   
   const isMainGroup = ["main", "media", "status"].includes(activeCategoryId);
-  const isSpecGroup = ["packaging", "flavor", "weight"].includes(activeCategoryId);
+  const isSpecGroup = ["packaging", "resin_base", "thinner_type", "gloss_level", "flavor", "weight"].includes(activeCategoryId);
 
   const fetchData = async () => {
     setIsLoading(true);

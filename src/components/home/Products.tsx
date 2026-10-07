@@ -24,10 +24,10 @@ import { getCategories } from "@/actions/category";
 
 // دیتای تستی پشتیبان در صورت خالی بودن دیتابیس
 const fallbackProducts = [
-  { _id: "1", slug: "#", faTitle: "انرژی‌زا مکس", enTitle: "Max Energy", category: "beverage", images: { main: "https://placehold.co/400x600/111827/ffffff?text=Energy" } },
-  { _id: "2", slug: "#", faTitle: "آب پرتقال طبیعی", enTitle: "Natural Orange", category: "beverage", images: { main: "https://placehold.co/400x600/f97316/ffffff?text=Orange" } },
-  { _id: "3", slug: "#", faTitle: "چیپس نمکی", enTitle: "Salty Chips", category: "snack", images: { main: "https://placehold.co/400x600/facc15/000000?text=Chips" } },
-  { _id: "4", slug: "#", faTitle: "پفک پنیری", enTitle: "Cheese Curls", category: "snack", images: { main: "https://placehold.co/400x600/ef4444/ffffff?text=Curls" } },
+  { _id: "1", slug: "super-gloss-alkyd-paint", faTitle: "رنگ روغنی براق آلکیدی سوپر", enTitle: "Super Gloss Alkyd Enamel", category: "oil", images: { main: "https://placehold.co/400x600/111827/ffffff?text=Oil+Paint" } },
+  { _id: "2", slug: "premium-matt-plastic-paint", faTitle: "رنگ پلاستیک مات پرمیوم", enTitle: "Premium Matt Plastic Paint", category: "plastic", images: { main: "https://placehold.co/400x600/1e3a8a/ffffff?text=Plastic+Paint" } },
+  { _id: "3", slug: "instant-nitro-clear-coat", faTitle: "سیلر و کیلر فوری نیتروسلولزی", enTitle: "Instant Nitro Clear Coat", category: "instant", images: { main: "https://placehold.co/400x600/b45309/ffffff?text=Instant+Paint" } },
+  { _id: "4", slug: "industrial-zinc-chromate-primer", faTitle: "ضد زنگ و آستری صنعتی زینک کرومات", enTitle: "Industrial Zinc Chromate Primer", category: "industrial", images: { main: "https://placehold.co/400x600/047857/ffffff?text=Industrial+Primer" } },
 ];
 
 const themeList = [
@@ -255,10 +255,11 @@ export default function Products() {
                       const subCatObj = categoriesData.find(c => c.slug === product.category);
                       const catLabel = subCatObj ? (isRtl ? subCatObj.faName : subCatObj.enName) : (product.category || product.mainCat);
 
-                      // استخراج داینامیک وزن
-                      const weightVal = product.specs?.weight || product.weight || "";
-                      const weightCat = categoriesData.find(c => c.slug === weightVal || c.faName === weightVal || c._id === weightVal);
-                      const finalWeight = weightCat ? (isRtl ? weightCat.faName : weightCat.enName) : (isRtl ? (product.specs?.weightFa || weightVal) : (product.specs?.weightEn || weightVal));
+                      // استخراج داینامیک مشخصه رنگ (پوشش‌دهی، رزین یا بسته‌بندی)
+                      const paintSpec = isRtl 
+                        ? (product.specs?.resinBase?.fa || product.specs?.coverage?.fa || product.specs?.weightFa || product.specs?.weight || "")
+                        : (product.specs?.resinBase?.en || product.specs?.coverage?.en || product.specs?.weightEn || product.specs?.weight || "");
+                      const finalSpec = paintSpec;
 
                       return (
                         <CarouselItem key={product._id || index} className="pl-2 md:pl-4 md:basis-1/2 lg:basis-1/4">
@@ -324,10 +325,10 @@ export default function Products() {
                                     {title}
                                   </h3>
 
-                                  {/* سطر پایین: وزن/حجم محصول */}
-                                  {finalWeight && (
-                                    <p className="text-sm text-gray-600 dark:text-gray-300 font-bold drop-shadow-sm w-full">
-                                      {finalWeight}
+                                  {/* سطر پایین: مشخصات تخصصی رنگ */}
+                                  {finalSpec && (
+                                    <p className="text-sm text-gray-600 dark:text-gray-300 font-bold drop-shadow-sm w-full truncate">
+                                      {finalSpec}
                                     </p>
                                   )}
                                 </CardContent>

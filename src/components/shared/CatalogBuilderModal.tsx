@@ -92,8 +92,8 @@ const CatalogContent = ({
 
   let globalPageCounter = 1;
 
-  const companyNameFa = hqData?.faName && hqData.faName !== 'کارخانه' ? hqData.faName : "جزیره گندم";
-  const companyNameEn = hqData?.enName && hqData.enName !== 'Factory' ? hqData.enName : "Jazirah Gandum";
+  const companyNameFa = hqData?.faName && hqData.faName !== 'کارخانه' ? hqData.faName : "رنگ افغان فیضی";
+  const companyNameEn = hqData?.enName && hqData.enName !== 'Factory' ? hqData.enName : "Afghan Faizi Paint";
 
   return (
     <div className="w-[210mm] mx-auto bg-white text-gray-900 shadow-2xl origin-top" dir={isRtl ? 'rtl' : 'ltr'}>
@@ -145,7 +145,7 @@ const CatalogContent = ({
                   <Mail size={14} className="text-white" />
                 </div>
                 <span className="text-[11px] font-bold mt-0.5 tracking-wide">
-                  {hqData?.email || "info@jazirahgandumco.com"}
+                  {hqData?.email || "info@afghanfaizipaint.com"}
                 </span>
               </div>
               <div className="flex items-start gap-4">
@@ -153,7 +153,7 @@ const CatalogContent = ({
                   <MapPin size={14} className="text-white" />
                 </div>
                 <span className="text-[11px] font-bold leading-relaxed max-w-55 mt-0.5">
-                  <bdi>{isRtl ? (hqData?.faAddress || "آدرس شرکت") : (hqData?.enAddress || "Company Address")}</bdi>
+                  <bdi>{isRtl ? (hqData?.faAddress || "آدرس شرکت: هرات، شهرک صنعتی") : (hqData?.enAddress || "Company Address: Industrial City, Herat")}</bdi>
                 </span>
               </div>
             </div>
@@ -164,7 +164,7 @@ const CatalogContent = ({
                   <Globe size={14} className="text-white" />
                 </div>
                 <span className="text-[11px] font-bold uppercase tracking-[0.15em] mt-0.5" dir="ltr">
-                  WWW.JAZIRAHGANDUMCO.COM
+                  WWW.AFGHANFAIZIPAINT.COM
                 </span>
               </div>
               <div className="flex items-center gap-4">
@@ -232,7 +232,7 @@ const CatalogContent = ({
               </div>
               <div className="flex-1 flex items-center justify-end" dir="ltr">
                 <span className="uppercase tracking-widest">
-                  WWW.JAZIRAHGANDUMCO.COM
+                  WWW.AFGHANFAIZIPAINT.COM
                 </span>
               </div>
             </div>
@@ -275,7 +275,7 @@ const CatalogContent = ({
           <div key={p._id} id={`prod-${p._id}`} className="print-page flex flex-col bg-white h-[297mm] overflow-hidden page-break relative scroll-mt-0">
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03] z-0 overflow-hidden">
               <span className="text-9xl font-black rotate-[-35deg] whitespace-nowrap">
-                Jazirah Gandum
+                Afghan Faizi Paint
               </span>
             </div>
 
@@ -448,7 +448,7 @@ const CatalogContent = ({
               </div>
               <div className="flex-1 flex items-center justify-end" dir="ltr">
                 <span className="uppercase tracking-widest">
-                  WWW.JAZIRAHGANDUMCO.COM
+                  WWW.AFGHANFAIZIPAINT.COM
                 </span>
               </div>
             </div>

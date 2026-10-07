@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
   experimental: {
     serverActions: {
       // معرفی دامنه سایت برای جلوگیری از بلاک شدن لاگین توسط Next.js
-      allowedOrigins: ['jazirahgandumco.com', 'www.jazirahgandumco.com']
+      allowedOrigins: ['afghanfaizipaint.com', 'www.afghanfaizipaint.com']
     }
   },
   images: {
@@ -20,13 +20,13 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'jazirahgandumco.com',
+        hostname: 'afghanfaizipaint.com',
         port: '',
         pathname: '/**',
       },
       {
         protocol: 'https',
-        hostname: 'www.jazirahgandumco.com',
+        hostname: 'www.afghanfaizipaint.com',
         port: '',
         pathname: '/**',
       },

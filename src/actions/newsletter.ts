@@ -8,11 +8,11 @@ import nodemailer from "nodemailer";
 
 // تنظیمات ترانسپورتر ارسال ایمیل از اکانت رسمی شرکت
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST || "mail.jazirahgandumco.com",
+  host: process.env.SMTP_HOST || "mail.afghanfaizipaint.com",
   port: Number(process.env.SMTP_PORT) || 465,
   secure: true, // true برای پورت 465
   auth: {
-    user: process.env.SMTP_USER || "info@jazirahgandumco.com",
+    user: process.env.SMTP_USER || "info@afghanfaizipaint.com",
     pass: process.env.SMTP_PASS || "YourEmailPasswordHere"
   }
 });
@@ -32,7 +32,7 @@ export async function subscribeToNewsletter(data: { email: string; name?: string
         await existing.save();
         return { success: true, message: "عضویت شما در باشگاه مشترکین مجدداً فعال شد." };
       }
-      return { success: true, message: "شما قبلاً در باشگاه مشترکین گندم عضو شده‌اید!" };
+      return { success: true, message: "شما قبلاً در باشگاه مشترکین رنگ افغان فیضی عضو شده‌اید!" };
     }
 
     await Subscriber.create({
@@ -97,21 +97,21 @@ export async function sendNewsletterBlast(data: { subject: string; htmlContent: 
     const fullHtmlTemplate = `
       <div style="font-family: Tahoma, Arial, sans-serif; max-width: 650px; margin: 0 auto; background-color: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px; overflow: hidden; direction: rtl; text-align: right;">
         <div style="background-color: #f59e0b; padding: 24px; text-align: center;">
-          <h2 style="color: #111827; margin: 0; font-size: 22px; font-weight: 900;">شرکت صنعتی جزیره گندم</h2>
+          <h2 style="color: #111827; margin: 0; font-size: 22px; font-weight: 900;">شرکت تولید رنگ افغان فیضی</h2>
         </div>
         <div style="padding: 32px; color: #374151; font-size: 15px; line-height: 1.8;">
           ${data.htmlContent}
         </div>
         <div style="background-color: #111827; padding: 20px; text-align: center; color: #9ca3af; font-size: 12px;">
-          <p style="margin: 0 0 8px 0;">شما این ایمیل را به دلیل عضویت در باشگاه مشتریان جزیره گندم دریافت کرده‌اید.</p>
-          <p style="margin: 0;">www.jazirahgandumco.com</p>
+          <p style="margin: 0 0 8px 0;">شما این ایمیل را به دلیل عضویت در باشگاه مشتریان و نرخنامه رنگ افغان فیضی دریافت کرده‌اید.</p>
+          <p style="margin: 0;">www.afghanfaizipaint.com</p>
         </div>
       </div>
     `;
 
     // ارسال ایمیل از طریق SMTP رسمی
     await transporter.sendMail({
-      from: `"باشگاه مشتریان جزیره گندم" <${process.env.SMTP_USER || "info@jazirahgandumco.com"}>`,
+      from: `"باشگاه مشتریان رنگ افغان فیضی" <${process.env.SMTP_USER || "info@afghanfaizipaint.com"}>`,
       bcc: emailList, // استفاده از BCC برای حفظ حریم خصوصی ایمیل کاربران
       subject: data.subject,
       html: fullHtmlTemplate

@@ -33,9 +33,9 @@ export default function BlogListPage() {
 
   const categories = [
     { id: "all", label: isRtl ? "همه مقالات" : "All Articles" },
-    { id: "health", label: isRtl ? "سبک زندگی و سلامت" : "Health & Lifestyle" },
-    { id: "news", label: isRtl ? "اخبار گندم" : "Gandum News" },
-    { id: "products", label: isRtl ? "معرفی محصولات" : "Products" }
+    { id: "guide", label: isRtl ? "آموزش نقاشی و اجرا" : "Painting Guide" },
+    { id: "news", label: isRtl ? "اخبار رنگ افغان فیضی" : "Faizi Paint News" },
+    { id: "products", label: isRtl ? "معرفی محصولات رنگ" : "Paint Products" }
   ];
 
   const filteredPosts = posts.filter(p => activeCategory === "all" || p.category === activeCategory);
@@ -71,12 +71,12 @@ export default function BlogListPage() {
       
       <div className="mb-16 text-center overflow-hidden py-4">
         <motion.h1 {...titleAnim} className="text-4xl md:text-6xl font-black text-gray-900 dark:text-white mb-4 tracking-tight">
-          {isRtl ? "مجله گندم" : "Gandum Magazine"}
+          {isRtl ? "مجله تخصصی رنگ افغان فیضی" : "Faizi Paint Technical Magazine"}
         </motion.h1>
         <motion.p {...descAnim} className="text-gray-600 dark:text-gray-300 font-medium max-w-2xl mx-auto">
           {isRtl 
-            ? "داستان‌ها، اخبار و مقالات تخصصی از دنیای نوشیدنی‌ها و سبک زندگی سالم." 
-            : "Stories, news, and specialized articles from the world of beverages and a healthy lifestyle."}
+            ? "مقالات تخصصی، راهنمای انتخاب رنگ‌های ساختمانی و صنعتی، و تکنیک‌های اجرای حرفه‌ای." 
+            : "Specialized articles, architectural and industrial paint guides, and professional application techniques."}
         </motion.p>
 
         <motion.div {...filterAnim} className="flex flex-wrap items-center justify-center gap-3 mt-8">

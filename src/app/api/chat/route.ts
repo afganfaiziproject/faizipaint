@@ -120,40 +120,45 @@ categoryEn:
         return cat?.title ?? p.category;
     })(),
 
-flavorEn:
-    p.specs?.flavorEn ?? "",
-    
-    weight:
-        p.specs?.weight ??
-        p.weight ??
-        "",
+resinBaseFa:
+    p.specs?.resinBase?.fa || p.specs?.resinBase || "",
+resinBaseEn:
+    p.specs?.resinBase?.en || "",
 
-    packagingFa:
-    p.specs?.packagingFa ?? "",
-    packagingEn:
-    p.specs?.packagingEn ?? "",
-    flavorFa:
-    p.specs?.flavorFa ?? "",
+thinnerTypeFa:
+    p.specs?.thinnerType?.fa || p.specs?.thinnerType || "",
+thinnerTypeEn:
+    p.specs?.thinnerType?.en || "",
+
+coverageFa:
+    p.specs?.coverage?.fa || p.specs?.coverage || "",
+coverageEn:
+    p.specs?.coverage?.en || "",
+
+surfaceDryFa:
+    p.specs?.dryingTime?.surfaceDry?.fa || "",
+fullDryFa:
+    p.specs?.dryingTime?.fullDry?.fa || "",
+
+standardCodes:
+    p.specs?.standardCodes || [],
+colorCode:
+    p.specs?.colorCode || "",
 
 descriptionFa:
-    p.faDesc ?? "",
+    p.faDesc ?? p.description?.fa ?? "",
 
 descriptionEn:
-    p.enDesc ?? "",
+    p.enDesc ?? p.description?.en ?? "",
 
-    brand:
+brand:
     p.brandId?.slug ?? "",
 
 brandFa:
-    p.brandId?.faTitle ?? "",
+    p.brandId?.faName ?? p.brandId?.faTitle ?? "",
 
 brandEn:
-    p.brandId?.title ?? "",
-    
-flavor:
-    p.specs?.flavor ??
-    p.specs?.flavorFa ??
-    "",
+    p.brandId?.enName ?? p.brandId?.title ?? "",
 
 tags:
     p.tags ?? [],
@@ -252,9 +257,9 @@ const lastUserMessage =
 // ----------------------------------------------------
 const userTextNorm = lastUserMessage.text.trim().toLowerCase();
 
-if (/^(سلام|خوبه|ممنون|مرسی|تشکر|hello|hi|thanks|thank you)$/i.test(userTextNorm)) {
+if (/^(سلام|خوبه|ممنون|مرسی|تشکر|hello|hi|thanks|thank you|سلامونه)$/i.test(userTextNorm)) {
     return NextResponse.json({
-        reply: locale === "fa" ? "سلام! من دستیار هوشمند جزیره گندم هستم. چطور می‌توانم کمکتان کنم؟" : "Hello! I am the Jazirah Gandum smart assistant. How can I help you?",
+        reply: locale === "fa" ? "سلام! من دستیار هوشمند شرکت رنگ افغان فیضی هستم. چطور می‌توانم در انتخاب رنگ و اطلاعات فنی به شما کمک کنم؟" : locale === "ps" ? "سلام! زه د افغان فیضي رنګ هوښیار همکار یم. څنګه کولی شم ستاسو مرسته وکړم؟" : "Hello! I am the Afghan Faizi Paint smart assistant. How can I help you?",
         products: [],
         action: null
     });

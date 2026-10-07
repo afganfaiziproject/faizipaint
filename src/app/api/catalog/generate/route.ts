@@ -65,11 +65,11 @@ export async function POST(req: Request) {
           </div>
           
           <h1 class="text-6xl font-black text-gray-900 mb-6 tracking-tighter leading-tight">
-            ${isRtl ? (hqData?.faName || "شرکت جزیره گندم") : (hqData?.enName || "Jazirah Gandum Co.")}
+            ${isRtl ? (hqData?.faName || "شرکت تولید رنگ افغان فیضی") : (hqData?.enName || "Afghan Faizi Paint Co.")}
           </h1>
           <div class="w-32 h-2 bg-gray-900 mb-6"></div>
           <h2 class="text-3xl font-bold text-amber-900 uppercase tracking-widest mb-16">
-            ${isRtl ? "کاتالوگ جامع و مشخصات فنی محصولات" : "Comprehensive Product Catalog & TDS"}
+            ${isRtl ? "کاتالوگ جامع و مشخصات فنی رنگ و رزین" : "Comprehensive Paint Catalog & TDS"}
           </h2>
           
           <div class="mt-auto flex flex-col gap-4 text-gray-900 font-bold text-xl bg-amber-500/20 p-8 rounded-3xl border border-amber-500/30 w-full max-w-lg">
@@ -79,11 +79,11 @@ export async function POST(req: Request) {
             </p>
             <p class="flex items-center justify-center gap-3">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-              ${hqData?.email || "info@jazirahgandumco.com"}
+              ${hqData?.email || "info@afghanfaizipaint.com"}
             </p>
             <p class="text-sm mt-2 leading-relaxed border-t border-amber-500/30 pt-4 flex items-start justify-center gap-3">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="shrink-0 mt-0.5"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-              ${isRtl ? (hqData?.faAddress || "آدرس شرکت") : (hqData?.enAddress || "Company Address")}
+              ${isRtl ? (hqData?.faAddress || "هرات، شهرک صنعتی، فاز ۲، افغانستان") : (hqData?.enAddress || "Industrial City, Phase 2, Herat, Afghanistan")}
             </p>
           </div>
         </div>
@@ -186,43 +186,30 @@ export async function POST(req: Request) {
                 <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-2xl ${!(p.hasWarning && warningMsg) ? 'mt-auto' : ''}">
                    <div class="flex items-center gap-2 mb-1">
                       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-                      <h4 class="font-black text-emerald-700 text-sm">${isRtl ? 'اصالت و کیفیت' : 'Authenticity Guarantee'}</h4>
+                      <h4 class="font-black text-emerald-700 text-sm">${isRtl ? 'اصالت و کیفیت رنگ' : 'Paint Quality Guarantee'}</h4>
                    </div>
-                   <p class="text-[10px] text-emerald-600 font-medium leading-relaxed">${isRtl ? 'این محصول تحت استانداردهای کیفی جزیره گندم تولید شده است.' : 'Produced under Jazirah Gandum strict quality standards.'}</p>
+                   <p class="text-[10px] text-emerald-600 font-medium leading-relaxed">${isRtl ? 'این محصول مطابق بالاترین استانداردهای رنگ افغان فیضی تولید شده است.' : 'Formulated and produced under Afghan Faizi Paint strict quality standards.'}</p>
                 </div>
               </div>
             </div>
 
-            <!-- جدول مشخصات فنی و ترکیبات -->
+            <!-- جدول مشخصات فنی رنگ -->
             <div class="flex gap-8">
-              <div class="w-1/2">
+              <div class="w-full">
                 <div class="bg-gray-50 rounded-2xl border border-gray-200 overflow-hidden">
                   <div class="bg-gray-900 px-5 py-3 font-black text-white flex items-center gap-2">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-                    ${isRtl ? 'پارامترهای فنی' : 'Technical Parameters'}
+                    ${isRtl ? 'مشخصات مهندسی و پارامترهای رنگ' : 'Paint Technical Specifications'}
                   </div>
-                  <div class="flex flex-col text-sm">
-                    <div class="flex justify-between p-4 border-b border-gray-200"><span class="font-bold text-gray-500">${isRtl ? 'وزن / حجم ظرف' : 'Net Weight'}</span><span class="font-black text-gray-900" dir="ltr">${weight || "-"}</span></div>
-                    <div class="flex justify-between p-4 border-b border-gray-200 bg-white"><span class="font-bold text-gray-500">${isRtl ? 'نوع بسته‌بندی' : 'Packaging'}</span><span class="font-black text-gray-900">${packaging || "-"}</span></div>
-                    <div class="flex justify-between p-4 border-b border-gray-200"><span class="font-bold text-gray-500">${isRtl ? 'تعداد در کارتن/شیرینگ' : 'Items per Pack'}</span><span class="font-black text-gray-900">${itemsPerPack}</span></div>
-                    <div class="flex justify-between p-4 border-b border-gray-200 bg-white"><span class="font-bold text-gray-500">${isRtl ? 'طعم و عصاره پایه' : 'Flavor'}</span><span class="font-black text-gray-900">${flavor || "-"}</span></div>
-                    <div class="flex justify-between p-4"><span class="font-bold text-gray-500">${isRtl ? 'تاریخ انقضا' : 'Shelf Life'}</span><span class="font-black text-gray-900">${shelfLife || "-"}</span></div>
+                  <div class="grid grid-cols-2 text-sm">
+                    <div class="flex justify-between p-4 border-b border-gray-200"><span class="font-bold text-gray-500">${isRtl ? 'پایه رزین' : 'Resin Base'}</span><span class="font-black text-gray-900">${(p.specs?.resinBase?.fa || p.specs?.resinBase) || "-"}</span></div>
+                    <div class="flex justify-between p-4 border-b border-gray-200 bg-white"><span class="font-bold text-gray-500">${isRtl ? 'نوع حلال / تینر' : 'Thinner / Solvent'}</span><span class="font-black text-gray-900">${(p.specs?.thinnerType?.fa || p.specs?.thinnerType) || "-"}</span></div>
+                    <div class="flex justify-between p-4 border-b border-gray-200"><span class="font-bold text-gray-500">${isRtl ? 'پوشش‌دهی' : 'Coverage Rate'}</span><span class="font-black text-gray-900">${(p.specs?.coverage?.fa || p.specs?.coverage) || "10-12 m²/L"}</span></div>
+                    <div class="flex justify-between p-4 border-b border-gray-200 bg-white"><span class="font-bold text-gray-500">${isRtl ? 'زمان خشک شدن' : 'Drying Time'}</span><span class="font-black text-gray-900">${p.specs?.dryingTime?.surfaceDry?.fa || "-"} (سطحی)</span></div>
+                    <div class="flex justify-between p-4"><span class="font-bold text-gray-500">${isRtl ? 'کد استاندارد / رال' : 'Color / RAL'}</span><span class="font-black text-gray-900">${p.specs?.colorCode || "RAL Standard"}</span></div>
+                    <div class="flex justify-between p-4 bg-white"><span class="font-bold text-gray-500">${isRtl ? 'بسته‌بندی' : 'Packaging'}</span><span class="font-black text-gray-900">${packaging || "-"}</span></div>
                   </div>
                 </div>
-              </div>
-
-              <div class="w-1/2 flex flex-col">
-                ${ingredients ? `
-                  <div class="bg-gray-50 rounded-2xl border border-gray-200 overflow-hidden h-full">
-                    <div class="bg-gray-200/50 px-5 py-3 font-black text-gray-900 flex items-center gap-2 border-b border-gray-200">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11a5 5 0 1 0 6 0"/><path d="M12 2v9"/><path d="M12 15v7"/><path d="M6 21h12"/></svg>
-                      ${isRtl ? 'ترکیبات اصلی' : 'Main Ingredients'}
-                    </div>
-                    <div class="p-5 text-sm text-gray-700 leading-loose text-justify font-medium">
-                      ${ingredients}
-                    </div>
-                  </div>
-                ` : ''}
               </div>
             </div>
 
@@ -230,11 +217,11 @@ export async function POST(req: Request) {
 
           <!-- فوتر صفحه -->
           <div class="h-16 bg-gray-900 mt-auto flex justify-between items-center px-12 text-xs font-bold text-gray-300">
-            <span class="text-amber-400">${isRtl ? (hqData?.faName || "") : (hqData?.enName || "")}</span>
+            <span class="text-amber-400">${isRtl ? (hqData?.faName || "رنگ افغان فیضی") : (hqData?.enName || "Afghan Faizi Paint")}</span>
             <div class="flex items-center gap-4">
                <span>Page ${index + 1} of ${products.length}</span>
                <span class="opacity-30">|</span>
-               <span dir="ltr">${hqData?.mapUrl ? new URL(hqData.mapUrl).hostname : "jazirahgandumco.com"}</span>
+               <span dir="ltr">${hqData?.mapUrl ? new URL(hqData.mapUrl).hostname : "afghanfaizipaint.com"}</span>
             </div>
           </div>
         </div>
@@ -266,7 +253,7 @@ export async function POST(req: Request) {
       status: 200,
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `attachment; filename="Jazirah-Gandum-Catalog-${Date.now()}.pdf"`
+        'Content-Disposition': `attachment; filename="Afghan-Faizi-Paint-Catalog-${Date.now()}.pdf"`
       }
     });
 

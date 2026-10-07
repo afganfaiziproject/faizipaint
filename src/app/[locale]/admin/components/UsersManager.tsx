@@ -27,7 +27,7 @@ export default function UsersManager() {
   const availablePermissions = [
     { id: "products", label: "مدیریت محصولات و برندها" },
     { id: "gallery", label: "گالری و رسانه" },
-    { id: "blog", label: "تحریریه و مجله گندم" },
+    { id: "blog", label: "تحریریه و مجله تخصصی رنگ" },
     { id: "settings", label: "تنظیمات عمومی سایت" }
   ];
 

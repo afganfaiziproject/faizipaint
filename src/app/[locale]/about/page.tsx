@@ -257,7 +257,7 @@ export default function AboutPage() {
         {/* ۱. معرفی شرکت */}
         <motion.div variants={staggerContainer} initial="hidden" whileInView="show" viewport={{ once: false, amount: 0.2 }} className="scroll-mt-28 flex flex-col items-center text-center">
           <motion.div variants={fadeInUp} className="p-3 bg-amber-400/10 rounded-2xl mb-4 mx-auto w-max"><Building2 size={40} className="text-amber-500" /></motion.div>
-          <motion.h1 variants={fadeInUp} className="text-3xl md:text-5xl font-black text-gray-900 dark:text-white mb-6">{isRtl ? "درباره جزیره گندم" : "About Jazirah Gandum"}</motion.h1>
+          <motion.h1 variants={fadeInUp} className="text-3xl md:text-5xl font-black text-gray-900 dark:text-white mb-6">{isRtl ? "درباره شرکت رنگ افغان فیضی" : "About Afghan Faizi Paint"}</motion.h1>
           <motion.p variants={fadeInUp} className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed max-w-4xl mx-auto text-justify md:text-center mb-8">
             {isRtl ? introData.aboutFa : introData.aboutEn}
           </motion.p>
@@ -386,9 +386,9 @@ export default function AboutPage() {
           </div>
         </motion.div>
 
-        {/* ۵. چرا جزیره گندم؟ */}
+        {/* ۵. چرا رنگ افغان فیضی؟ */}
         <motion.div variants={staggerContainer} initial="hidden" whileInView="show" viewport={{ once: false, amount: 0.1 }}>
-          <motion.h2 variants={fadeInUp} className="text-2xl font-black text-gray-900 dark:text-white mb-6 text-center">{isRtl ? "چرا جزیره گندم؟" : "Why Jazirah Gandum?"}</motion.h2>
+          <motion.h2 variants={fadeInUp} className="text-2xl font-black text-gray-900 dark:text-white mb-6 text-center">{isRtl ? "چرا رنگ افغان فیضی؟" : "Why Afghan Faizi Paint?"}</motion.h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {whyUsList.map(item => (
               <motion.div key={item.id} variants={fadeInUp} className="bg-amber-400/5 border border-amber-400/20 p-6 rounded-3xl flex flex-col items-center text-center gap-4 text-amber-700 dark:text-amber-400 hover:bg-amber-400/10 transition-colors">

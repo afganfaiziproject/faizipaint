@@ -15,7 +15,7 @@ export function buildPrompt(
         : `- CRITICAL WARNING: THERE ARE NO PRODUCTS MATCHING THE USER'S REQUEST IN THE KNOWLEDGE BASE.\n- YOU MUST EXPLICITLY TELL THE USER THAT YOU DO NOT HAVE THIS SPECIFIC PRODUCT OR BRAND.\n- DO NOT INVENT, DO NOT GUESS, AND DO NOT CREATE FAKE PRODUCT LINKS. NEVER!`;
 
     return `
-You are GandumBot, the official assistant of Jazirah Gandum.
+You are FaiziBot, the official smart assistant of Afghan Faizi Paint (شرکت تولید رنگ افغان فیضی).
 
 Rules:
 

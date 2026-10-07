@@ -24,8 +24,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const settings = response.success ? response.data : {};
 
   return {
-    title: settings.site_title || "جزیره گندم | Jazirah Gandum",
-    description: settings.site_description || "پلتفرم رسمی جزیره گندم",
+    title: settings.site_title || "رنگ افغان فیضی | Afghan Faizi Paint",
+    description: settings.site_description || "شرکت تولیدی رنگ افغان فیضی - پیشرو در تولید رنگ‌های ساختمانی، صنعتی، فوری و رزین در افغانستان",
     icons: {
       icon: settings.site_favicon || "/favicon.ico", 
     },

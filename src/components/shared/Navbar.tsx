@@ -141,7 +141,7 @@ export default function Navbar({
     { key: "products", fa: "محصولات", en: "Products", href: `/${locale}/products`, isProductsDropdown: true },
     { key: "brands", fa: "برندها", en: "Brands", href: `/${locale}/brands`, isBrandsMenu: true },
     { key: "gallery", fa: "گالری", en: "Gallery", href: `/${locale}/gallery` },
-    { key: "blog", fa: "مجله گندم", en: "Blog", href: `/${locale}/blog` },
+    { key: "blog", fa: "مجله و مقالات رنگ", en: "Blog", href: `/${locale}/blog` },
     {
       key: "about", fa: "درباره ما", en: "About Us", href: `/${locale}/about`, subLinks: [
         { id: "history", fa: "تاریخچه و معرفی", en: "History & About" },
@@ -181,13 +181,13 @@ export default function Navbar({
           <span className="flex gap-1">
             {isRtl ? (
               <>
-                <span className="text-gray-900 dark:text-white drop-shadow-sm transition-colors">جزیره</span>
-                <span className="text-amber-400 drop-shadow-sm">گندم</span>
+                <span className="text-gray-900 dark:text-white drop-shadow-sm transition-colors">رنگ افغان</span>
+                <span className="text-amber-400 drop-shadow-sm">فیضی</span>
               </>
             ) : (
               <>
-                <span className="text-gray-900 dark:text-white drop-shadow-sm transition-colors">JAZIRAH</span>
-                <span className="text-amber-400 drop-shadow-sm">GANDUM</span>
+                <span className="text-gray-900 dark:text-white drop-shadow-sm transition-colors">AFGHAN FAIZI</span>
+                <span className="text-amber-400 drop-shadow-sm">PAINT</span>
               </>
             )}
           </span>

@@ -348,7 +348,7 @@ function GalleryContent() {
                             className="absolute inset-0 bg-black/85 backdrop-blur-md flex flex-col items-center justify-center p-6 z-20"
                           >
                             <h3 className="text-white font-black text-sm md:text-base mb-4 flex items-center gap-2">
-                              <Sparkles className="text-amber-400" size={16}/> {isRtl ? "پیشنهاد بعدی جزیره گندم" : "Recommended Next"}
+                              <Sparkles className="text-amber-400" size={16}/> {isRtl ? "پیشنهاد بعدی رنگ افغان فیضی" : "Recommended Next"}
                             </h3>
                             
                             <div className="grid grid-cols-2 gap-3 max-w-xl w-full">

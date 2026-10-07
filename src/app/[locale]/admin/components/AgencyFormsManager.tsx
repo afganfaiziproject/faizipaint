@@ -47,7 +47,7 @@ export default function AgencyFormsManager() {
       <div className="bg-white dark:bg-gray-900 p-6 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm flex flex-col md:flex-row justify-between items-center gap-4">
         <div>
           <h2 className="text-xl font-black text-gray-900 dark:text-white">درخواست‌های نمایندگی</h2>
-          <p className="text-sm text-gray-500">بررسی و مدیریت فرم‌های اخذ نمایندگی جزیره گندم</p>
+          <p className="text-sm text-gray-500">بررسی و مدیریت فرم‌های اخذ نمایندگی ولایتی رنگ افغان فیضی</p>
         </div>
         
         <div className="flex items-center gap-3">

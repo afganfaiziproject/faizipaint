@@ -138,7 +138,7 @@ function ProductsContent() {
           className="text-3xl md:text-5xl font-black text-gray-900 dark:text-white tracking-tight mb-3"
         >
           {isRtl ? "ویترین محصولات " : "Products of "}
-          <span className="text-amber-500">{isRtl ? "جزیره گندم" : "Jazirah Gandum"}</span>
+          <span className="text-amber-500">{isRtl ? "رنگ افغان فیضی" : "Afghan Faizi Paint"}</span>
         </motion.h1>
 
         <motion.p
@@ -147,7 +147,7 @@ function ProductsContent() {
           transition={{ duration: 0.8, ease: customEase, delay: 0.1 }}
           className="text-sm font-bold text-gray-500 dark:text-gray-400"
         >
-          {isRtl ? "جستجو در بین ده‌ها محصول، برند و طعم متنوع" : "Search among dozens of products, brands, and flavors"}
+          {isRtl ? "جستجو در بین انواع رنگ‌های ساختمانی، صنعتی، فوری و رزین‌ها" : "Search among architectural, industrial, instant paints, and resins"}
         </motion.p>
       </motion.div>
 
@@ -281,11 +281,10 @@ function ProductsContent() {
                 const brandName = isRtl ? (product.brandId?.faName || "") : (product.brandId?.enName || product.brandId?.faName || "");
                 const imgUrl = product.images?.main || "https://placehold.co/400x400/png";
 
-                const weightVal = product.specs?.weight || product.weight || "";
-                const weightCat = categoriesData.find(c => c.slug === weightVal || c.faName === weightVal || c._id === weightVal);
-                const finalWeight = weightCat
-                  ? (isRtl ? weightCat.faName : weightCat.enName)
-                  : (isRtl ? (product.specs?.weightFa || weightVal) : (product.specs?.weightEn || weightVal));
+                const paintSpec = isRtl
+                  ? (product.specs?.coverage?.fa || product.specs?.resinBase?.fa || product.specs?.weightFa || product.specs?.weight || "")
+                  : (product.specs?.coverage?.en || product.specs?.resinBase?.en || product.specs?.weightEn || product.specs?.weight || "");
+                const finalWeight = paintSpec;
 
                 const subCatObj = categoriesData.find(c => c.slug === product.category);
                 const catLabel = subCatObj ? (isRtl ? subCatObj.faName : subCatObj.enName) : product.category;

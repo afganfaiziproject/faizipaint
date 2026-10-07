@@ -124,8 +124,8 @@ export async function adminReplyToComment(commentId: string, replyText: string) 
 
     // ۱. ایجاد پاسخ ادمین به صورت خودکار تایید شده
     await Comment.create({
-      name: "مدیریت جزیره گندم",
-      email: "admin@jazirahgandumco.com",
+      name: "مدیریت رنگ افغان فیضی",
+      email: "admin@afghanfaizipaint.com",
       text: replyText.trim(),
       articleId: parentComment.articleId,
       parentId: parentComment._id.toString(),

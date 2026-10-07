@@ -171,7 +171,7 @@ export default function NewsletterManager() {
                       type="text" 
                       value={subject} 
                       onChange={e => setSubject(e.target.value)} 
-                      placeholder="مثال: معرفی محصولات جدید تنقلات جزیره گندم + تخفیف ویژه" 
+                      placeholder="مثال: اعلام نرخنامه جدید ولایتی و محصولات رنگ افغان فیضی" 
                       className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm font-bold outline-none focus:border-amber-400" 
                       required 
                     />
